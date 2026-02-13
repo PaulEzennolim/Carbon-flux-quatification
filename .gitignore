@@ -1,0 +1,228 @@
+# ============================================
+# Carbon Flux Thesis - Git Ignore
+# ============================================
+
+# ============================================
+# DATA FILES (LARGE - DON'T COMMIT)
+# ============================================
+
+# Raw data files
+data/raw/*.csv
+data/raw/*.xlsx
+data/raw/*.xls
+
+# Processed data (numpy arrays can be large)
+data/processed/*.npy
+data/processed/*.npz
+data/processed/*.pkl
+data/processed/*.pickle
+
+# Intermediate data
+data/interim/
+data/temp/
+
+# ============================================
+# MODEL FILES (LARGE - DON'T COMMIT)
+# ============================================
+
+# Model checkpoints
+models/checkpoints/**/*.pth
+models/checkpoints/**/*.pt
+models/checkpoints/**/*.h5
+models/checkpoints/**/*.ckpt
+models/checkpoints/**/*.weights
+
+# Trained models
+*.pkl
+*.pickle
+*.joblib
+*.model
+
+# TEMPO cache
+checkpoints/TEMPO_checkpoints/
+
+# Hugging Face cache
+.cache/
+huggingface/
+
+# ============================================
+# RESULTS & OUTPUTS (COMMIT SUMMARIES ONLY)
+# ============================================
+
+# Large result files
+results/**/*.npy
+results/**/*.npz
+
+# Keep summary CSVs and plots (these are small)
+!results/**/*.csv
+!results/**/*.png
+!results/**/*.jpg
+!results/**/*.pdf
+
+# Predictions (can be regenerated)
+predictions/
+outputs/large_predictions/
+
+# ============================================
+# PYTHON
+# ============================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# IPython
+profile_default/
+ipython_config.py
+
+# ============================================
+# IDE / EDITORS
+# ============================================
+
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+.idea_modules/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ============================================
+# OPERATING SYSTEM
+# ============================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# ============================================
+# LOGS & TEMPORARY FILES
+# ============================================
+
+# Logs
+*.log
+logs/
+*.out
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+
+# ============================================
+# THESIS SPECIFIC
+# ============================================
+
+# Draft thesis chapters (keep in separate private repo)
+thesis/drafts/
+thesis/*.aux
+thesis/*.bbl
+thesis/*.blg
+thesis/*.log
+thesis/*.out
+thesis/*.toc
+thesis/*.lof
+thesis/*.lot
+thesis/*.synctex.gz
+thesis/*.fdb_latexmk
+thesis/*.fls
+
+# Personal notes
+notes/
+TODO.txt
+NOTES.md
+
+# Experiments tracking (if using MLflow, wandb, etc.)
+mlruns/
+wandb/
+
+# ============================================
+# KEEP THESE SMALL FILES (EXPLICITLY ALLOW)
+# ============================================
+
+# Keep requirements and configs
+!requirements.txt
+!environment.yml
+!setup.py
+!pyproject.toml
+
+# Keep small documentation
+!README.md
+!CHANGELOG.md
+!LICENSE
+
+# Keep thesis figures (finalized plots only)
+!thesis/figures/*.png
+!thesis/figures/*.pdf
+!thesis/figures/*.jpg
+
+# Keep example/demo data (small samples)
+!data/examples/*.csv
+!data/samples/*.npy
