@@ -32,6 +32,13 @@ models/checkpoints/**/*.h5
 models/checkpoints/**/*.ckpt
 models/checkpoints/**/*.weights
 
+# HuggingFace / TEMPO cached snapshots inside checkpoints
+models/checkpoints/**/models--*/
+models/checkpoints/**/blobs/
+models/checkpoints/**/snapshots/
+models/checkpoints/**/refs/
+models/checkpoints/**/.locks/
+models/checkpoints/**/.lock
 # Trained models
 *.pkl
 *.pickle
