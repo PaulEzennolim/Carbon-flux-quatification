@@ -1,0 +1,7 @@
+Model,Site,RMSE,MAE,R2
+RandomForest,UK-AMo,3.0746,2.3268,0.2945
+RandomForest,SE-Htm,6.4853,4.7658,0.2058
+XGBoost,UK-AMo,2.8492,2.2126,0.3941
+XGBoost,SE-Htm,6.2622,4.6264,0.2593
+LSTM,UK-AMo,nan,nan,nan
+LSTM,SE-Htm,nan,nan,nan
