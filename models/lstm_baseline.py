@@ -113,6 +113,5 @@ def main():
         print(f"  LSTM:  RMSE={metrics['RMSE']:.4f}  "
               f"MAE={metrics['MAE']:.4f}  R2={metrics['R2']:.4f}")
 
-
 if __name__ == "__main__":
     main()
