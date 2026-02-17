@@ -87,6 +87,55 @@ HYPERPARAMS = {
 
 
 # ---------------------------------------------------------------------------
+# NaN imputation safety net
+# ---------------------------------------------------------------------------
+NAN_FEATURE_INDICES = [1, 4, 5, 6, 7]  # Features with known NaN from diagnostics
+
+
+def impute_features(X, feature_indices=None, fit_values=None):
+    """
+    Targeted median imputation for known problematic features.
+    Only imputes features 1, 4, 5, 6, 7 which have NaN.
+    Features 0, 2, 3, 8-18 are clean and left untouched.
+
+    Args:
+        X: shape (n_samples, seq_len, n_features)
+        feature_indices: which features to impute
+        fit_values: pre-computed medians (use training medians for test data)
+
+    Returns:
+        X_clean: imputed array
+        medians: computed medians (save for test imputation)
+    """
+    if feature_indices is None:
+        feature_indices = NAN_FEATURE_INDICES
+    X_clean = X.copy()
+    medians = {}
+
+    for feat_idx in feature_indices:
+        feature_data = X_clean[:, :, feat_idx]
+
+        if fit_values is None:
+            median_val = np.nanmedian(feature_data)
+            medians[feat_idx] = median_val
+        else:
+            median_val = fit_values[feat_idx]
+            medians[feat_idx] = median_val
+
+        nan_mask = np.isnan(feature_data)
+        X_clean[:, :, feat_idx][nan_mask] = median_val
+
+        filled = nan_mask.sum()
+        if filled > 0:
+            log.info(
+                "  Feature %d: filled %s NaN with median=%.4f",
+                feat_idx, f"{filled:,}", median_val,
+            )
+
+    return X_clean, medians
+
+
+# ---------------------------------------------------------------------------
 # Data loading
 # ---------------------------------------------------------------------------
 def load_data():
@@ -420,6 +469,21 @@ def main():
         log.error("Run data preprocessing first.")
         sys.exit(1)
 
+    # --- NaN imputation safety net ---
+    log.info("Imputing NaN in training data...")
+    X_train, train_medians = impute_features(X_train)
+
+    for site in TEST_SITES:
+        log.info("Imputing NaN in %s test data (using training medians)...", site)
+        test_data[site]["X"], _ = impute_features(
+            test_data[site]["X"], fit_values=train_medians
+        )
+
+    assert np.isnan(X_train).sum() == 0, "NaN still in train!"
+    for site in TEST_SITES:
+        assert np.isnan(test_data[site]["X"]).sum() == 0, f"NaN still in {site}!"
+    log.info("All NaN imputed successfully")
+
     all_results = {}
     all_preds = {}
 
@@ -465,6 +529,17 @@ def main():
     # --- Summary ---
     print_summary(all_results)
     log.info("All checkpoints saved to models/checkpoints/baselines/")
+
+    # --- Final verification: ensure no NaN in LSTM metrics ---
+    print("\n=== FINAL VERIFICATION ===")
+    if "LSTM" in all_results:
+        for site, vals in all_results["LSTM"].items():
+            for metric, val in vals.items():
+                assert not np.isnan(val), f"NaN in LSTM {site} {metric}!"
+        print("All LSTM metrics are valid numbers")
+    else:
+        print("WARNING: LSTM results not available for verification")
+
     log.info("Done.")
 
 

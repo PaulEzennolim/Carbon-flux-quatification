@@ -13,11 +13,93 @@ Your data structure:
 - Test sites: 2 sites (UK-AMo, SE-Htm) for cross-site generalization
 """
 
+import json
 import pandas as pd
 import numpy as np
 from pathlib import Path
 from sklearn.preprocessing import StandardScaler
 import torch
+
+
+def fill_feature_gaps(df, feature_cols, site_name=None,
+                      cross_site_medians=None):
+    """
+    Enhanced gap-filling with cross-site fallback for
+    completely missing features.
+
+    Strategy (applied in order):
+    1. Linear interpolation  (short gaps < 48 hours)
+    2. Forward/backward fill (medium gaps < 14 days)
+    3. Seasonal median       (long gaps - uses day-of-year)
+    4. Cross-site median     (if entire column missing)
+    5. Global zero/constant  (absolute last resort)
+    """
+    df_filled = df.copy()
+    features_needing_crosssite = []
+
+    for col in feature_cols:
+        nan_count = df_filled[col].isna().sum()
+        if nan_count == 0:
+            continue
+
+        total = len(df_filled[col])
+        nan_pct = nan_count / total * 100
+        prefix = f"  [{site_name}] " if site_name else "  "
+        print(f"{prefix}Filling {col}: {nan_pct:.1f}% NaN")
+
+        # STEP 1: Linear interpolation for short gaps (< 48 timesteps)
+        df_filled[col] = df_filled[col].interpolate(
+            method='linear',
+            limit=48,
+            limit_direction='both'
+        )
+
+        # STEP 2: Forward/backward fill for medium gaps
+        df_filled[col] = df_filled[col].ffill(limit=336)
+        df_filled[col] = df_filled[col].bfill(limit=336)
+
+        # STEP 3: Seasonal median (day-of-year based)
+        if df_filled[col].isna().sum() > 0:
+            if hasattr(df_filled.index, 'dayofyear'):
+                doy = df_filled.index.dayofyear
+            else:
+                doy = pd.to_datetime(df_filled.index).dayofyear
+
+            temp_df = pd.DataFrame({
+                'value': df_filled[col],
+                'doy': doy
+            })
+            valid_count = temp_df['value'].notna().sum()
+            if valid_count > 48:  # Need at least 2 days of data
+                seasonal_med = temp_df.groupby('doy')['value'].transform('median')
+                df_filled[col] = df_filled[col].fillna(seasonal_med)
+
+        # STEP 4: Cross-site median (for 100% missing features)
+        if df_filled[col].isna().sum() > 0:
+            if cross_site_medians is not None and col in cross_site_medians:
+                cross_median = cross_site_medians[col]
+                filled_count = df_filled[col].isna().sum()
+                df_filled[col] = df_filled[col].fillna(cross_median)
+                print(f"{prefix}  Used cross-site median ({cross_median:.4f}) "
+                      f"for {filled_count:,} values in {col}")
+                features_needing_crosssite.append(col)
+            else:
+                features_needing_crosssite.append(col)
+
+        # STEP 5: Absolute fallback - zero fill
+        if df_filled[col].isna().sum() > 0:
+            remaining = df_filled[col].isna().sum()
+            df_filled[col] = df_filled[col].fillna(0.0)
+            print(f"{prefix}  WARNING: Used 0.0 fallback for "
+                  f"{remaining:,} values in {col}")
+
+    remaining_nan = df_filled.isna().sum().sum()
+    assert remaining_nan == 0, f"NaN remaining after gap-fill: {remaining_nan}"
+    prefix = f"  [{site_name}] " if site_name else "  "
+    print(f"{prefix}Gap-filling complete, 0 NaN remaining")
+
+    return df_filled, features_needing_crosssite
+
 
 class CarbonFluxDataProcessor:
     """
@@ -70,39 +152,43 @@ class CarbonFluxDataProcessor:
             
         return df
     
-    def preprocess_site(self, df):
-        """
-        Preprocess a single site's data.
-        
-        Steps:
-        1. Handle missing values
-        2. Create temporal features
-        3. Normalize features
-        4. Extract target variable
-        """
-        # Ensure datetime index
+    def _set_datetime_index(self, df):
+        """Ensure datetime index on a dataframe."""
         ts_col = 'TIMESTAMP' if 'TIMESTAMP' in df.columns else 'timestamp'
         if ts_col in df.columns:
             df[ts_col] = pd.to_datetime(df[ts_col], dayfirst=True)
             df = df.set_index(ts_col)
-        
+        return df
+
+    def preprocess_site(self, df, site_name=None, cross_site_medians=None):
+        """
+        Preprocess a single site's data.
+
+        Steps:
+        1. Handle missing values (with cross-site fallback)
+        2. Normalize features
+        3. Extract target variable
+        """
+        df = self._set_datetime_index(df)
+
         # Extract target
         target = df['NEE_VUT_REF'].ffill().bfill().values
-        
+
         # Combine all features
-        features = df[self.meteorological_vars + self.modis_bands + self.temporal_features].copy()
-        
-        # Handle missing values
-        # Option 1: Forward fill (common for EC data)
-        features = features.ffill().bfill()
-        
-        # Option 2: Could use more sophisticated gap-filling
-        # features = self.gapfill_advanced(features)
-        
+        all_feature_cols = self.meteorological_vars + self.modis_bands + self.temporal_features
+        features = df[all_feature_cols].copy()
+
+        # Targeted gap-filling with cross-site fallback
+        features, _ = fill_feature_gaps(
+            features, all_feature_cols,
+            site_name=site_name,
+            cross_site_medians=cross_site_medians
+        )
+
         # Normalize features using global scaler
         scaler = self.scalers['global']
         features_scaled = scaler.transform(features)
-        
+
         return features_scaled, target, df.index
     
     def create_tempo_sequences(self, features, target, lookback=336, horizon=96):
@@ -131,37 +217,85 @@ class CarbonFluxDataProcessor:
     def prepare_cross_site_splits(self):
         """
         Prepare data splits for cross-site generalization.
-        
-        Training strategy:
-        - Train on 5 sites: FI-Lom, GL-ZaF, IE-Cra, DE-Akm, FR-LGt
-        - Validate on portion of training sites
-        - Test on 2 held-out sites: UK-AMo, SE-Htm
+
+        Uses a two-pass approach:
+        - Pass 1: Load all sites, collect cross-site feature statistics
+        - Pass 2: Gap-fill using cross-site medians for 100% missing features
+
+        Training: FI-Lom, GL-ZaF, IE-Cra, DE-Akm, FR-LGt
+        Test:     UK-AMo, SE-Htm
         """
         train_sites = ['FI-Lom', 'GL-ZaF', 'IE-Cra', 'DE-Akm', 'FR-LGt']
         test_sites = ['UK-AMo', 'SE-Htm']
-        
-        # First pass: load and gap-fill all training site data to fit a global scaler
-        print("Loading training sites...")
+        all_feature_cols = self.meteorological_vars + self.modis_bands + self.temporal_features
+
+        # ─── PASS 1: Load all sites and compute cross-site statistics ───
+        print("Pass 1: Computing cross-site feature statistics...")
+        site_dataframes = {}
+        cross_site_values = {}  # col -> list of valid values across sites
+
+        for site in train_sites + test_sites:
+            df = self.load_site_data(site)
+            df = self._set_datetime_index(df)
+            site_dataframes[site] = df
+
+            # Collect valid values for each feature
+            for col in all_feature_cols:
+                if col not in df.columns:
+                    continue
+                valid_vals = df[col].dropna()
+                if len(valid_vals) > 0:
+                    if col not in cross_site_values:
+                        cross_site_values[col] = []
+                    cross_site_values[col].extend(
+                        valid_vals.sample(
+                            min(1000, len(valid_vals)),
+                            random_state=42
+                        ).tolist()
+                    )
+
+        # Compute cross-site medians
+        cross_site_medians = {
+            col: float(np.median(vals))
+            for col, vals in cross_site_values.items()
+        }
+        self.cross_site_medians = cross_site_medians
+
+        print(f"  Computed cross-site medians for {len(cross_site_medians)} features")
+        print("  Key medians:")
+        for col in ['LW_IN_F', 'PA_F', 'WS_F', 'G_F_MDS']:
+            if col in cross_site_medians:
+                print(f"    {col}: {cross_site_medians[col]:.4f}")
+
+        # ─── PASS 2: Gap-fill with cross-site fallback ──────────────────
+        print("\nPass 2: Gap-filling all training sites...")
         train_raw = {}
         all_features = []
+
         for site in train_sites:
-            df = self.load_site_data(site)
-            ts_col = 'TIMESTAMP' if 'TIMESTAMP' in df.columns else 'timestamp'
-            if ts_col in df.columns:
-                df[ts_col] = pd.to_datetime(df[ts_col], dayfirst=True)
-                df = df.set_index(ts_col)
+            print(f"\n  Processing {site}...")
+            df = site_dataframes[site]
             target = df['NEE_VUT_REF'].ffill().bfill().values
-            features = df[self.meteorological_vars + self.modis_bands + self.temporal_features].copy()
-            features = features.ffill().bfill()
+            features = df[all_feature_cols].copy()
+
+            features, missing_features = fill_feature_gaps(
+                features, all_feature_cols,
+                site_name=site,
+                cross_site_medians=cross_site_medians
+            )
+
+            if missing_features:
+                print(f"    Features filled with cross-site data: {missing_features}")
+
             train_raw[site] = (features, target, df.index)
             all_features.append(features)
 
-        # Fit global scaler on all training data
+        # Fit global scaler on all gap-filled training data
         global_scaler = StandardScaler()
         global_scaler.fit(pd.concat(all_features))
         self.scalers['global'] = global_scaler
 
-        # Second pass: scale and create sequences
+        # Scale and create sequences
         train_features_list = []
         train_targets_list = []
         for site in train_sites:
@@ -172,17 +306,19 @@ class CarbonFluxDataProcessor:
             train_targets_list.append(y)
             print(f"  {site}: {len(X)} sequences")
 
-        # Concatenate all training data
         X_train = np.concatenate(train_features_list, axis=0)
         y_train = np.concatenate(train_targets_list, axis=0)
 
         # Prepare test data (held-out sites)
         test_data = {}
-        print("\nLoading test sites...")
+        print("\nProcessing test sites...")
         for site in test_sites:
+            print(f"\n  Processing {site}...")
             df = self.load_site_data(site)
-            features, target, timestamps = self.preprocess_site(df)
-            
+            features, target, timestamps = self.preprocess_site(
+                df, site_name=site, cross_site_medians=cross_site_medians
+            )
+
             X_test, y_test = self.create_tempo_sequences(features, target)
             test_data[site] = {
                 'X': X_test,
@@ -190,10 +326,11 @@ class CarbonFluxDataProcessor:
                 'timestamps': timestamps
             }
             print(f"  {site}: {len(X_test)} sequences")
-        
+
         return {
             'train': {'X': X_train, 'y': y_train},
-            'test': test_data
+            'test': test_data,
+            'cross_site_medians': cross_site_medians
         }
     
     def prepare_for_tempo(self, X, y):
@@ -244,8 +381,14 @@ def main():
     for site, data in data_splits['test'].items():
         np.save(output_dir / f'test_{site}_X.npy', data['X'])
         np.save(output_dir / f'test_{site}_y.npy', data['y'])
-    
-    print("\n✓ Data saved successfully!")
+
+    # Save cross-site medians for later use in TEMPO inference
+    medians_path = output_dir / 'cross_site_medians.json'
+    with open(medians_path, 'w') as f:
+        json.dump(data_splits['cross_site_medians'], f, indent=2)
+    print(f"\nCross-site medians saved to {medians_path}")
+
+    print("\nData saved successfully!")
     print("\nNext steps:")
     print("1. Run zero-shot TEMPO inference (no training)")
     print("2. Fine-tune TEMPO on your training data")
