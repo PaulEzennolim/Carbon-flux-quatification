@@ -1,0 +1,8 @@
+Site_Code,Site_Name,Country,Ecosystem_Type,Latitude,Longitude,Elevation_m,Climate,Data_Split,Data_Period,N_Records,Primary_Vegetation
+FI-Lom,Lompolojankka,Finland,Wetland,67.9972,24.2092,274,Subarctic (Dfc),Training,2009-02 to 2009-10,5348,Minerotrophic sedge fen; Sphagnum spp.
+GL-ZaF,Zackenberg Fen,Greenland,Wetland,74.4814,-20.5545,38,Tundra (ET),Training,2011-05 to 2011-10,2789,High Arctic tundra fen; mosses and sedges
+IE-Cra,Clara Bog,Ireland,Wetland,53.3231,-7.6418,55,Temperate oceanic (Cfb),Training,2020-01 to 2020-12,8783,Ombrotrophic raised bog; Calluna vulgaris and Sphagnum spp.
+DE-Akm,Anklam,Germany,Wetland,53.8662,13.6834,1,Temperate oceanic (Cfb),Training,2020-03 to 2020-10,3836,Rewetted coastal peatland; Phragmites and sedges
+FR-LGt,La Guette,France,Wetland,47.3229,2.2841,153,Temperate oceanic (Cfb),Training,2022-01 to 2022-11,5294,Acidic fen; Molinia caerulea and Sphagnum spp.
+UK-AMo,Auchencorth Moss,United Kingdom,Wetland,55.7925,-3.2437,268,Subpolar oceanic (Cfc),Test,2021-11 to 2022-12,9485,Blanket bog; grasses and Sphagnum papillosum
+SE-Htm,Hyltemossa,Sweden,Forest,56.0976,13.4189,115,Temperate oceanic (Cfb),Test,2016-01 to 2016-08,5437,Managed Norway spruce (Picea abies 97.7%); moss ground layer
