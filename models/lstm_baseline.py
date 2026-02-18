@@ -1,4 +1,32 @@
-# lstm_baseline.py
+"""
+LSTM Baseline Model for Carbon Flux Prediction
+===============================================
+Implements a Long Short-Term Memory (LSTM) neural network for
+sequential carbon flux forecasting from multivariate EC tower data.
+
+The LSTM captures temporal dependencies in meteorological and satellite
+observations to predict 96-hour Net Ecosystem Exchange (NEE) trajectories.
+
+Usage:
+------
+    from models.lstm_baseline import LSTMModel
+    
+    model = LSTMModel(input_size=19, hidden_size=128, num_layers=2, 
+                      output_size=96, dropout=0.2)
+    
+    # Training
+    criterion = nn.MSELoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    
+    for epoch in range(num_epochs):
+        optimizer.zero_grad()
+        output = model(batch_X)
+        loss = criterion(output, batch_y)
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+        optimizer.step()
+"""
+
 import numpy as np
 from pathlib import Path
 import torch

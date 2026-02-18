@@ -1,4 +1,47 @@
-# baseline_models.py
+"""
+Tree-Based Baseline Models for Carbon Flux Prediction
+======================================================
+Implements Random Forest and XGBoost ensemble models as baselines
+for comparison against deep learning and foundation model approaches.
+
+These traditional machine learning models provide interpretable,
+robust baselines for cross-site carbon flux generalization assessment.
+
+Models Included:
+----------------
+1. RandomForestModel
+   - Ensemble of 200 decision trees
+   - Max depth: 15 (prevents overfitting)
+   - Min samples split: 10
+   - Handles non-linear meteorological-NEE relationships
+   - Provides feature importance rankings
+
+2. XGBoostModel
+   - Gradient boosting with 200 trees
+   - Learning rate: 0.01 (conservative for generalization)
+   - Max depth: 6
+   - Better captures feature interactions than RF
+   - Efficient on tabular EC tower data
+
+Usage:
+------
+    from models.baseline_models import RandomForestModel, XGBoostModel
+    
+    # Random Forest
+    rf = RandomForestModel(n_estimators=200, max_depth=15)
+    rf.fit(train_X_flat, train_y_flat)
+    predictions = rf.predict(test_X_flat)
+    
+    # XGBoost
+    xgb = XGBoostModel(n_estimators=200, learning_rate=0.01)
+    xgb.fit(train_X_flat, train_y_flat)
+    predictions = xgb.predict(test_X_flat)
+    
+    # Feature importance
+    importances = rf.feature_importances_
+    top_10_idx = np.argsort(importances)[-10:]
+"""
+
 import numpy as np
 from pathlib import Path
 from sklearn.ensemble import RandomForestRegressor
