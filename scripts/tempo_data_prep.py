@@ -36,16 +36,15 @@ def fill_feature_gaps(df, feature_cols, site_name=None,
     """
     df_filled = df.copy()
     features_needing_crosssite = []
+    n_cols_filled = 0
+    zero_fallback_cols = []
 
     for col in feature_cols:
         nan_count = df_filled[col].isna().sum()
         if nan_count == 0:
             continue
 
-        total = len(df_filled[col])
-        nan_pct = nan_count / total * 100
-        prefix = f"  [{site_name}] " if site_name else "  "
-        print(f"{prefix}Filling {col}: {nan_pct:.1f}% NaN")
+        n_cols_filled += 1
 
         # STEP 1: Linear interpolation for short gaps (< 48 timesteps)
         df_filled[col] = df_filled[col].interpolate(
@@ -78,25 +77,24 @@ def fill_feature_gaps(df, feature_cols, site_name=None,
         if df_filled[col].isna().sum() > 0:
             if cross_site_medians is not None and col in cross_site_medians:
                 cross_median = cross_site_medians[col]
-                filled_count = df_filled[col].isna().sum()
                 df_filled[col] = df_filled[col].fillna(cross_median)
-                print(f"{prefix}  Used cross-site median ({cross_median:.4f}) "
-                      f"for {filled_count:,} values in {col}")
                 features_needing_crosssite.append(col)
             else:
                 features_needing_crosssite.append(col)
 
         # STEP 5: Absolute fallback - zero fill
         if df_filled[col].isna().sum() > 0:
-            remaining = df_filled[col].isna().sum()
             df_filled[col] = df_filled[col].fillna(0.0)
-            print(f"{prefix}  WARNING: Used 0.0 fallback for "
-                  f"{remaining:,} values in {col}")
+            zero_fallback_cols.append(col)
 
     remaining_nan = df_filled.isna().sum().sum()
     assert remaining_nan == 0, f"NaN remaining after gap-fill: {remaining_nan}"
+
     prefix = f"  [{site_name}] " if site_name else "  "
-    print(f"{prefix}Gap-filling complete, 0 NaN remaining")
+    status = f"{n_cols_filled} features gap-filled, 0 NaN remaining"
+    if zero_fallback_cols:
+        status += f"  ⚠ Zero-fallback applied to: {zero_fallback_cols}"
+    print(f"{prefix}✓ {status}")
 
     return df_filled, features_needing_crosssite
 
@@ -230,7 +228,7 @@ class CarbonFluxDataProcessor:
         all_feature_cols = self.meteorological_vars + self.modis_bands + self.temporal_features
 
         # ─── PASS 1: Load all sites and compute cross-site statistics ───
-        print("Pass 1: Computing cross-site feature statistics...")
+        print("[1/4] Loading all sites and computing cross-site statistics...")
         site_dataframes = {}
         cross_site_values = {}  # col -> list of valid values across sites
 
@@ -260,20 +258,14 @@ class CarbonFluxDataProcessor:
             for col, vals in cross_site_values.items()
         }
         self.cross_site_medians = cross_site_medians
-
-        print(f"  Computed cross-site medians for {len(cross_site_medians)} features")
-        print("  Key medians:")
-        for col in ['LW_IN_F', 'PA_F', 'WS_F', 'G_F_MDS']:
-            if col in cross_site_medians:
-                print(f"    {col}: {cross_site_medians[col]:.4f}")
+        print(f"  ✓ Cross-site medians computed for {len(cross_site_medians)} features")
 
         # ─── PASS 2: Gap-fill with cross-site fallback ──────────────────
-        print("\nPass 2: Gap-filling all training sites...")
+        print("\n[2/4] Gap-filling training sites...")
         train_raw = {}
         all_features = []
 
         for site in train_sites:
-            print(f"\n  Processing {site}...")
             df = site_dataframes[site]
             target = df['NEE_VUT_REF'].ffill().bfill().values
             features = df[all_feature_cols].copy()
@@ -285,12 +277,13 @@ class CarbonFluxDataProcessor:
             )
 
             if missing_features:
-                print(f"    Features filled with cross-site data: {missing_features}")
+                print(f"  [{site}] Cross-site fallback used for: {missing_features}")
 
             train_raw[site] = (features, target, df.index)
             all_features.append(features)
 
         # Fit global scaler on all gap-filled training data
+        print("\n[3/4] Fitting global scaler and creating sequences...")
         global_scaler = StandardScaler()
         global_scaler.fit(pd.concat(all_features))
         self.scalers['global'] = global_scaler
@@ -304,16 +297,15 @@ class CarbonFluxDataProcessor:
             X, y = self.create_tempo_sequences(features_scaled, target)
             train_features_list.append(X)
             train_targets_list.append(y)
-            print(f"  {site}: {len(X)} sequences")
+            print(f"  ✓ {site:<10}  {len(X):>6,} sequences")
 
         X_train = np.concatenate(train_features_list, axis=0)
         y_train = np.concatenate(train_targets_list, axis=0)
 
         # Prepare test data (held-out sites)
+        print("\n[4/4] Processing held-out test sites...")
         test_data = {}
-        print("\nProcessing test sites...")
         for site in test_sites:
-            print(f"\n  Processing {site}...")
             df = self.load_site_data(site)
             features, target, timestamps = self.preprocess_site(
                 df, site_name=site, cross_site_medians=cross_site_medians
@@ -325,7 +317,7 @@ class CarbonFluxDataProcessor:
                 'y': y_test,
                 'timestamps': timestamps
             }
-            print(f"  {site}: {len(X_test)} sequences")
+            print(f"  ✓ {site:<10}  {len(X_test):>6,} sequences")
 
         return {
             'train': {'X': X_train, 'y': y_train},
@@ -358,37 +350,55 @@ def main():
     """
     Main workflow for preparing data for TEMPO experiments.
     """
+    import time
+    from datetime import datetime
+
+    print("=" * 72)
+    print("DATA PREPARATION PIPELINE — CARBON FLUX FORECASTING")
+    print(f"Timestamp:  {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Strategy:   Cross-site generalisation (5 train / 2 test sites)")
+    print("=" * 72 + "\n")
+
+    t0 = time.time()
     processor = CarbonFluxDataProcessor()
-    
+
     # Prepare cross-site splits
     data_splits = processor.prepare_cross_site_splits()
-    
-    print("\n" + "="*60)
-    print("DATA PREPARATION SUMMARY")
-    print("="*60)
-    print(f"Training samples: {len(data_splits['train']['X'])}")
-    print(f"Feature dimension: {data_splits['train']['X'].shape[-1]}")
-    print(f"\nTest sites:")
-    for site, data in data_splits['test'].items():
-        print(f"  {site}: {len(data['X'])} samples")
-    
+
     # Save processed data
     output_dir = Path(__file__).resolve().parent.parent / 'data' / 'processed'
     output_dir.mkdir(exist_ok=True)
+
+    print("\n" + "─" * 72)
+    print("Saving processed arrays...")
     np.save(output_dir / 'train_X.npy', data_splits['train']['X'])
     np.save(output_dir / 'train_y.npy', data_splits['train']['y'])
+    print(f"  ✓ data/processed/train_X.npy  "
+          f"{data_splits['train']['X'].shape}")
+    print(f"  ✓ data/processed/train_y.npy  "
+          f"{data_splits['train']['y'].shape}")
 
     for site, data in data_splits['test'].items():
         np.save(output_dir / f'test_{site}_X.npy', data['X'])
         np.save(output_dir / f'test_{site}_y.npy', data['y'])
+        print(f"  ✓ data/processed/test_{site}_X/y.npy  "
+              f"{data['X'].shape}")
 
-    # Save cross-site medians for later use in TEMPO inference
     medians_path = output_dir / 'cross_site_medians.json'
     with open(medians_path, 'w') as f:
         json.dump(data_splits['cross_site_medians'], f, indent=2)
-    print(f"\nCross-site medians saved to {medians_path}")
+    print(f"  ✓ data/processed/cross_site_medians.json  "
+          f"({len(data_splits['cross_site_medians'])} features)")
 
-    print("\nData saved successfully!")
+    elapsed = time.time() - t0
+    X_train = data_splits['train']['X']
+    print(f"\n{'─' * 72}")
+    print(f"  Training sequences:   {len(X_train):>8,}  "
+          f"(lookback={X_train.shape[1]}, features={X_train.shape[2]})")
+    for site, d in data_splits['test'].items():
+        print(f"  Test {site:<10}:   {len(d['X']):>8,} sequences")
+    print(f"  ⏱  Completed in {elapsed:.1f}s")
+    print("=" * 72)
 
 if __name__ == "__main__":
     main()

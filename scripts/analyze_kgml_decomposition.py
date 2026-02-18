@@ -120,7 +120,6 @@ class KGMLAnalysis:
                 nee_series, index=pd.RangeIndex(len(nee_series))
             )
 
-        print(f"  Running STL decomposition (period={period})...")
         stl = STL(nee_series, period=period, robust=True)
         result = stl.fit()
 
@@ -146,8 +145,8 @@ class KGMLAnalysis:
             "residual_std": float(np.std(residual)),
         }
 
-        print(f"    Variance explained — Trend: {stats['trend_pct']:.1f}%, "
-              f"Seasonal: {stats['seasonal_pct']:.1f}%, "
+        print(f"  ✓ Variance — Trend: {stats['trend_pct']:.1f}%  "
+              f"Seasonal: {stats['seasonal_pct']:.1f}%  "
               f"Residual: {stats['residual_pct']:.1f}%")
 
         # Generate 4-panel plot
@@ -269,7 +268,9 @@ class KGMLAnalysis:
                     "FAIL: Expected daytime NEE < nighttime (photosynthesis)"
                 ),
             }
-            print(f"    Diurnal check: {'PASS' if daytime_lower else 'FAIL'} "
+            status = "✓" if daytime_lower else "✗"
+            print(f"  {status} Diurnal pattern:    "
+                  f"{'PASS' if daytime_lower else 'FAIL'}  "
                   f"(day={day_mean:.4f}, night={night_mean:.4f})")
         else:
             report["checks"]["diurnal_pattern"] = {
@@ -301,10 +302,10 @@ class KGMLAnalysis:
                         "FAIL: Expected growing season NEE < dormant season"
                     ),
                 }
-                print(f"    Seasonal trend: "
-                      f"{'PASS' if growing_more_negative else 'FAIL'} "
-                      f"(growing={growing_trend:.4f}, "
-                      f"dormant={dormant_trend:.4f})")
+                status = "✓" if growing_more_negative else "✗"
+                print(f"  {status} Seasonal trend:     "
+                      f"{'PASS' if growing_more_negative else 'FAIL'}  "
+                      f"(growing={growing_trend:.4f}, dormant={dormant_trend:.4f})")
             else:
                 report["checks"]["seasonal_trend"] = {
                     "pass": False,
@@ -344,7 +345,9 @@ class KGMLAnalysis:
                 f"WARNING: Residual mean={resid_mean:.4f} may indicate bias"
             ),
         }
-        print(f"    Residual check: {'PASS' if near_zero else 'WARN'} "
+        status = "✓" if near_zero else "⚠"
+        print(f"  {status} Residual properties: "
+              f"{'PASS' if near_zero else 'WARN'}  "
               f"(mean={resid_mean:.4f}, std={resid_std:.4f}, "
               f"lag1_acf={lag1_corr:.3f})")
 
@@ -403,6 +406,8 @@ class KGMLAnalysis:
 
         # Per-component error metrics
         components = {}
+        print(f"\n  {'Component':<12} {'RMSE':>8}  {'Correlation':>12}")
+        print(f"  {'─'*12} {'─'*8}  {'─'*12}")
         for comp_name in ["trend", "seasonal", "resid"]:
             actual_comp = getattr(stl_actual, comp_name).values
             pred_comp = getattr(stl_pred, comp_name).values
@@ -411,7 +416,7 @@ class KGMLAnalysis:
             corr = float(np.corrcoef(actual_comp, pred_comp)[0, 1])
 
             components[comp_name] = {"rmse": rmse, "correlation": corr}
-            print(f"    {comp_name:>10}: RMSE={rmse:.4f}, corr={corr:.4f}")
+            print(f"  {comp_name:<12} {rmse:>8.4f}  {corr:>12.4f}")
 
         # Generate comparison figure
         self._plot_tempo_comparison(
@@ -615,39 +620,46 @@ def load_predictions(site_name):
         path = PREDICTIONS_DIR / fname
         if path.exists():
             preds[label] = np.load(path)
-            print(f"    Loaded {label}: {preds[label].shape}")
+            print(f"  ✓ {label:<22} {preds[label].shape}")
     return preds
 
 
 def analyze_site(analyzer, site_name):
     """Run full decomposition analysis for a single site."""
-    print(f"\n{'='*60}")
-    print(f"ANALYZING {site_name} "
-          f"({SITE_INFO.get(site_name, {}).get('name', '')})")
-    print(f"{'='*60}")
+    info = SITE_INFO.get(site_name, {})
+    print(f"\n{'═'*72}")
+    print(f"  {site_name}  —  {info.get('name', '')}  "
+          f"({info.get('ecosystem', '')})")
+    print(f"{'═'*72}")
 
     # Load raw NEE
-    print("\n  Loading raw NEE time series...")
+    print("\n[a] Loading raw NEE time series...")
     nee_series, doy, tod = analyzer.load_raw_nee(site_name)
-    print(f"    {len(nee_series)} timesteps loaded")
+    print(f"  ✓ {len(nee_series):,} timesteps loaded")
 
     # STL decomposition on full series
-    print("\n  STL decomposition on full time series...")
+    print("\n[b] STL decomposition (period=24h)...")
     decomp = analyzer.analyze_decomposition(nee_series, site_name, period=24)
+    print(f"  ✓ Saved: results/analysis/decomposition/stl_decomposition_{site_name}.png")
 
     # Diurnal cycle plot
-    print("\n  Extracting diurnal cycle...")
+    print("\n[c] Extracting diurnal cycle...")
     analyzer.plot_diurnal_cycle(decomp["seasonal"], site_name, period=24)
+    print(f"  ✓ Saved: results/analysis/decomposition/diurnal_cycle_{site_name}.png")
 
     # Ecological validation
-    print("\n  Validating ecological patterns...")
+    print("\n[d] Ecological pattern validation...")
     validation = analyzer.validate_ecological_patterns(
         decomp, site_name, tod=tod, doy=doy
     )
+    checks_passed = validation["checks_passed"]
+    checks_total = validation["checks_total"]
+    print(f"  ✓ {checks_passed}/{checks_total} checks passed")
 
     # PDF report
-    print("\n  Generating validation report...")
+    print("\n[e] Generating validation report (PDF)...")
     analyzer.generate_validation_report(decomp, validation, site_name)
+    print(f"  ✓ Saved: results/analysis/decomposition/validation_report_{site_name}.pdf")
 
     # Load targets for forecast-window analysis
     targets_path = PREDICTIONS_DIR / f"targets_{site_name}.npy"
@@ -657,9 +669,9 @@ def analyze_site(analyzer, site_name):
 
     if targets_path.exists():
         targets = np.load(targets_path)  # (N, 96)
-        print(f"\n  Loaded forecast targets: {targets.shape}")
 
         # Load available predictions
+        print("\n[f] Loading model predictions for decomposition comparison...")
         preds = load_predictions(site_name)
 
         # Flatten first 500 windows into a continuous segment for comparison
@@ -671,15 +683,14 @@ def analyze_site(analyzer, site_name):
             if "TEMPO" not in label:
                 continue  # Only compare TEMPO variants
             pred_flat = pred_arr[:n_windows].flatten()
-            print(f"\n  Comparing {label} decomposition...")
+            print(f"\n[g] Comparing {label}...")
             comp = analyzer.compare_tempo_decomposition(
                 pred_flat, actual_flat, site_name, model_label=label
             )
             if comp is not None:
                 comparison_metrics[label] = comp
     else:
-        print(f"\n  No target predictions found for {site_name}, "
-              "skipping TEMPO comparison")
+        print(f"\n  ⚠ No targets found for {site_name} — skipping TEMPO comparison")
         comparison_metrics = {}
 
     # Collect all results
@@ -694,6 +705,9 @@ def analyze_site(analyzer, site_name):
 
 
 def main():
+    import time
+    from datetime import datetime
+
     parser = argparse.ArgumentParser(
         description="KGML decomposition analysis for carbon flux thesis"
     )
@@ -705,10 +719,13 @@ def main():
     args = parser.parse_args()
 
     sites = ["UK-AMo", "SE-Htm"] if args.all else [args.site]
+    t_start = time.time()
 
-    print("=" * 60)
-    print("KGML DECOMPOSITION ANALYSIS")
-    print("=" * 60)
+    print("=" * 72)
+    print("KGML DECOMPOSITION ANALYSIS — CARBON FLUX THESIS")
+    print(f"Timestamp:  {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Sites:      {', '.join(sites)}")
+    print("=" * 72)
 
     analyzer = KGMLAnalysis()
     all_results = {}
@@ -719,7 +736,6 @@ def main():
     # Save combined metrics
     metrics_path = METRICS_DIR / "decomposition_metrics.json"
 
-    # Convert any non-serializable values
     def sanitize(obj):
         if isinstance(obj, (np.floating, np.integer)):
             return float(obj)
@@ -735,31 +751,41 @@ def main():
 
     with open(metrics_path, "w") as f:
         json.dump(sanitize(all_results), f, indent=2)
-    print(f"\nAll metrics saved: {metrics_path}")
 
     # Final summary
-    print("\n" + "=" * 60)
-    print("ANALYSIS SUMMARY")
-    print("=" * 60)
+    elapsed = time.time() - t_start
+    m, s = divmod(elapsed, 60)
+
+    print(f"\n{'═'*72}")
+    print("  ANALYSIS SUMMARY")
+    print(f"{'═'*72}")
+    print(f"\n  {'Site':<10} {'Ecosystem':<25} {'Trend':>7} {'Seasonal':>9} "
+          f"{'Residual':>9}  {'Checks':>8}")
+    print(f"  {'─'*10} {'─'*25} {'─'*7} {'─'*9} {'─'*9}  {'─'*8}")
     for site, res in all_results.items():
         stats = res["decomposition_stats"]
         val = res["validation"]
-        print(f"\n  {site} ({SITE_INFO[site]['ecosystem']}):")
-        print(f"    Variance — Trend: {stats['trend_pct']:.1f}%, "
-              f"Seasonal: {stats['seasonal_pct']:.1f}%, "
-              f"Residual: {stats['residual_pct']:.1f}%")
-        print(f"    Ecological checks: {val['checks_passed']}/"
-              f"{val['checks_total']} passed")
+        eco = SITE_INFO[site]["ecosystem"]
+        checks = f"{val['checks_passed']}/{val['checks_total']}"
+        print(f"  {site:<10} {eco:<25} {stats['trend_pct']:>6.1f}%  "
+              f"{stats['seasonal_pct']:>8.1f}%  {stats['residual_pct']:>8.1f}%  "
+              f"{checks:>8}")
 
-        if "tempo_comparison" in res:
-            for label, comp in res["tempo_comparison"].items():
-                print(f"    {label}:")
-                print(f"      Trend corr:    {comp['trend']['correlation']:.3f}")
-                print(f"      Seasonal corr: "
-                      f"{comp['seasonal']['correlation']:.3f}")
+    print(f"\n  TEMPO Decomposition Correlations:")
+    print(f"  {'─'*60}")
+    for site, res in all_results.items():
+        if "tempo_comparison" not in res:
+            continue
+        for label, comp in res["tempo_comparison"].items():
+            print(f"  {site}  {label}:")
+            print(f"    Trend r={comp['trend']['correlation']:.3f}  "
+                  f"Seasonal r={comp['seasonal']['correlation']:.3f}  "
+                  f"Residual r={comp['resid']['correlation']:.3f}")
 
-    print(f"\nOutputs saved to: {DECOMP_DIR}/")
-    print("Done.")
+    print(f"\n  ✓ Metrics:  results/metrics/decomposition_metrics.json")
+    print(f"  ✓ Figures:  results/analysis/decomposition/")
+    print(f"  ⏱  Completed in {m:.0f}m {s:.0f}s")
+    print(f"{'═'*72}")
 
 
 if __name__ == "__main__":

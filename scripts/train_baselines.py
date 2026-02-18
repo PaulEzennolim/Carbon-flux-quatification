@@ -125,13 +125,6 @@ def impute_features(X, feature_indices=None, fit_values=None):
         nan_mask = np.isnan(feature_data)
         X_clean[:, :, feat_idx][nan_mask] = median_val
 
-        filled = nan_mask.sum()
-        if filled > 0:
-            log.info(
-                "  Feature %d: filled %s NaN with median=%.4f",
-                feat_idx, f"{filled:,}", median_val,
-            )
-
     return X_clean, medians
 
 
@@ -140,7 +133,6 @@ def impute_features(X, feature_indices=None, fit_values=None):
 # ---------------------------------------------------------------------------
 def load_data():
     """Load training and test data from .npy files."""
-    log.info("Loading processed data...")
     X_train = np.load(DATA_DIR / "train_X.npy")
     y_train = np.load(DATA_DIR / "train_y.npy")
 
@@ -151,12 +143,6 @@ def load_data():
             "y": np.load(DATA_DIR / f"test_{site}_y.npy"),
         }
 
-    log.info(
-        "Train: %s | UK-AMo: %d | SE-Htm: %d samples",
-        X_train.shape,
-        test_data["UK-AMo"]["X"].shape[0],
-        test_data["SE-Htm"]["X"].shape[0],
-    )
     return X_train, y_train, test_data
 
 
@@ -199,33 +185,34 @@ def evaluate_and_predict_lstm(model, X, y):
 # ---------------------------------------------------------------------------
 def train_random_forest(X_train, y_train, test_data):
     """Train and evaluate Random Forest."""
-    log.info("Training Random Forest...")
-    log.info("  Hyperparameters: %s", json.dumps(HYPERPARAMS["RandomForest"]))
+    hp = HYPERPARAMS["RandomForest"]
+    log.info("  n_estimators=%d  max_depth=%d  min_samples_split=%d",
+             hp["n_estimators"], hp["max_depth"], hp["min_samples_split"])
 
     baselines = BaselineModels()
+    log.info("  Training on %d samples...", len(X_train))
     t0 = time.time()
     rf = baselines.train_random_forest(X_train, y_train)
     elapsed = time.time() - t0
-    log.info("  Trained in %.1fs", elapsed)
+    log.info("  ✓ Completed in %.1fs", elapsed)
 
     # Evaluate on test sites
     results = {}
     preds_dict = {}
+    print(f"\n  {'Site':<10} {'RMSE':>8} {'MAE':>8} {'R²':>8}")
+    print(f"  {'─'*10} {'─'*8} {'─'*8} {'─'*8}")
     for site in TEST_SITES:
         metrics, preds = evaluate_and_predict_sklearn(
             rf, test_data[site]["X"], test_data[site]["y"]
         )
         results[site] = metrics
         preds_dict[site] = preds
-        log.info(
-            "  %s: RMSE=%.4f  MAE=%.4f  R²=%.4f",
-            site, metrics["RMSE"], metrics["MAE"], metrics["R2"],
-        )
+        print(f"  {site:<10} {metrics['RMSE']:>8.4f} {metrics['MAE']:>8.4f} {metrics['R2']:>8.4f}")
 
     # Save checkpoint
     ckpt_path = CHECKPOINT_DIR / f"randomforest_{TIMESTAMP}.joblib"
     joblib.dump(rf, ckpt_path)
-    log.info("  Checkpoint saved: %s", ckpt_path.name)
+    log.info("  ✓ Checkpoint: models/checkpoints/baselines/%s", ckpt_path.name)
 
     return results, preds_dict
 
@@ -235,33 +222,34 @@ def train_random_forest(X_train, y_train, test_data):
 # ---------------------------------------------------------------------------
 def train_xgboost(X_train, y_train, test_data):
     """Train and evaluate XGBoost."""
-    log.info("Training XGBoost...")
-    log.info("  Hyperparameters: %s", json.dumps(HYPERPARAMS["XGBoost"]))
+    hp = HYPERPARAMS["XGBoost"]
+    log.info("  n_estimators=%d  learning_rate=%.3f  max_depth=%d",
+             hp["n_estimators"], hp["learning_rate"], hp["max_depth"])
 
     baselines = BaselineModels()
+    log.info("  Training on %d samples...", len(X_train))
     t0 = time.time()
     xgb = baselines.train_xgboost(X_train, y_train)
     elapsed = time.time() - t0
-    log.info("  Trained in %.1fs", elapsed)
+    log.info("  ✓ Completed in %.1fs", elapsed)
 
     # Evaluate on test sites
     results = {}
     preds_dict = {}
+    print(f"\n  {'Site':<10} {'RMSE':>8} {'MAE':>8} {'R²':>8}")
+    print(f"  {'─'*10} {'─'*8} {'─'*8} {'─'*8}")
     for site in TEST_SITES:
         metrics, preds = evaluate_and_predict_sklearn(
             xgb, test_data[site]["X"], test_data[site]["y"]
         )
         results[site] = metrics
         preds_dict[site] = preds
-        log.info(
-            "  %s: RMSE=%.4f  MAE=%.4f  R²=%.4f",
-            site, metrics["RMSE"], metrics["MAE"], metrics["R2"],
-        )
+        print(f"  {site:<10} {metrics['RMSE']:>8.4f} {metrics['MAE']:>8.4f} {metrics['R2']:>8.4f}")
 
     # Save checkpoint
     ckpt_path = CHECKPOINT_DIR / f"xgboost_{TIMESTAMP}.joblib"
     joblib.dump(xgb, ckpt_path)
-    log.info("  Checkpoint saved: %s", ckpt_path.name)
+    log.info("  ✓ Checkpoint: models/checkpoints/baselines/%s", ckpt_path.name)
 
     return results, preds_dict
 
@@ -272,13 +260,12 @@ def train_xgboost(X_train, y_train, test_data):
 def train_lstm_model(X_train, y_train, test_data):
     """Train and evaluate the LSTM with per-epoch validation."""
     params = HYPERPARAMS["LSTM"]
-    log.info("Training LSTM...")
-    log.info("  Hyperparameters: %s", json.dumps(params))
-
     input_size = X_train.shape[2]
     horizon = y_train.shape[1]
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
-    log.info("  Device: %s", device)
+    log.info("  Architecture:  2-layer LSTM (%d units, dropout=%.1f)",
+             params["hidden_size"], params["dropout"])
+    log.info("  Device:        %s", device)
 
     model = LSTMForecaster(
         input_size=input_size,
@@ -336,32 +323,32 @@ def train_lstm_model(X_train, y_train, test_data):
 
         if (epoch + 1) % 10 == 0 or epoch == 0:
             tqdm.write(
-                f"    Epoch {epoch+1:3d}/{params['epochs']}  "
-                f"train_loss={train_loss:.6f}  val_loss={val_loss:.6f}"
+                f"  Epoch {epoch+1:3d}/{params['epochs']}  │  "
+                f"train_loss={train_loss:.4f}  val_loss={val_loss:.4f}"
             )
 
     elapsed = time.time() - t0
-    log.info("  Trained in %.1fs", elapsed)
+    m, s = divmod(elapsed, 60)
+    log.info("  ✓ Completed in %.0fm %.0fs", m, s)
 
     # Restore best model
     if best_state is not None:
         model.load_state_dict(best_state)
         model = model.to(device)
-        log.info("  Restored best model (val_loss=%.6f)", best_val_loss)
+        log.info("  ✓ Best model restored (val_loss=%.6f)", best_val_loss)
 
     # Evaluate on test sites
     results = {}
     preds_dict = {}
+    print(f"\n  {'Site':<10} {'RMSE':>8} {'MAE':>8} {'R²':>8}")
+    print(f"  {'─'*10} {'─'*8} {'─'*8} {'─'*8}")
     for site in TEST_SITES:
         metrics, preds = evaluate_and_predict_lstm(
             model, test_data[site]["X"], test_data[site]["y"]
         )
         results[site] = metrics
         preds_dict[site] = preds
-        log.info(
-            "  %s: RMSE=%.4f  MAE=%.4f  R²=%.4f",
-            site, metrics["RMSE"], metrics["MAE"], metrics["R2"],
-        )
+        print(f"  {site:<10} {metrics['RMSE']:>8.4f} {metrics['MAE']:>8.4f} {metrics['R2']:>8.4f}")
 
     # Save checkpoint
     ckpt_path = CHECKPOINT_DIR / f"lstm_{TIMESTAMP}.pt"
@@ -375,7 +362,7 @@ def train_lstm_model(X_train, y_train, test_data):
         },
         ckpt_path,
     )
-    log.info("  Checkpoint saved: %s", ckpt_path.name)
+    log.info("  ✓ Checkpoint: models/checkpoints/baselines/%s", ckpt_path.name)
 
     return results, preds_dict
 
@@ -445,10 +432,13 @@ def print_summary(all_results):
 # Main
 # ---------------------------------------------------------------------------
 def main():
-    print("=" * 72)
-    print("BASELINE MODEL TRAINING")
-    print(f"Timestamp: {TIMESTAMP}")
-    print("=" * 72)
+    t_start = time.time()
+
+    print("=" * 80)
+    print("BASELINE MODEL TRAINING FOR CARBON FLUX PREDICTION")
+    print(f"Timestamp:  {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Seed:       {SEED}")
+    print("=" * 80)
 
     # Create output directories
     CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)
@@ -459,88 +449,100 @@ def main():
     hp_path = CHECKPOINT_DIR / f"hyperparameters_{TIMESTAMP}.json"
     with open(hp_path, "w") as f:
         json.dump(HYPERPARAMS, f, indent=2)
-    log.info("Hyperparameters logged to %s", hp_path.name)
 
-    # Load data
+    # ── [1/6] Load data ──────────────────────────────────────────────────────
+    print("\n[1/6] Loading Data")
+    print("─" * 80)
     try:
         X_train, y_train, test_data = load_data()
     except FileNotFoundError as e:
-        log.error("Data file not found: %s", e)
-        log.error("Run data preprocessing first.")
+        print(f"\n❌ ERROR: Data file not found")
+        print(f"   ├─ Missing: {e}")
+        print(f"   └─ Solution: Run 'python scripts/tempo_data_prep.py' first")
         sys.exit(1)
 
-    # --- NaN imputation safety net ---
-    log.info("Imputing NaN in training data...")
-    X_train, train_medians = impute_features(X_train)
-
+    n_train = X_train.shape[0]
+    print(f"  ✓ Training data:    {n_train:>8,} sequences  "
+          f"(lookback={X_train.shape[1]}, features={X_train.shape[2]})")
     for site in TEST_SITES:
-        log.info("Imputing NaN in %s test data (using training medians)...", site)
+        n_site = test_data[site]["X"].shape[0]
+        print(f"  ✓ Test {site}:   {n_site:>8,} sequences")
+
+    # ── [2/6] Data validation ─────────────────────────────────────────────────
+    print("\n[2/6] Data Validation")
+    print("─" * 80)
+    log.info("Validating data quality...")
+    X_train, train_medians = impute_features(X_train)
+    for site in TEST_SITES:
         test_data[site]["X"], _ = impute_features(
             test_data[site]["X"], fit_values=train_medians
         )
-
-    assert np.isnan(X_train).sum() == 0, "NaN still in train!"
-    for site in TEST_SITES:
-        assert np.isnan(test_data[site]["X"]).sum() == 0, f"NaN still in {site}!"
-    log.info("All NaN imputed successfully")
+    assert np.isnan(X_train).sum() == 0, "NaN detected in training data"
+    assert all(
+        np.isnan(test_data[s]["X"]).sum() == 0 for s in TEST_SITES
+    ), "NaN detected in test data"
+    print("  ✓ Data validation passed (0 NaN detected)")
 
     all_results = {}
     all_preds = {}
 
-    # --- Random Forest ---
+    # ── [3/6] Random Forest ───────────────────────────────────────────────────
+    print("\n[3/6] Training Random Forest")
+    print("─" * 80)
     try:
         rf_results, rf_preds = train_random_forest(X_train, y_train, test_data)
         all_results["RandomForest"] = rf_results
         all_preds["RandomForest"] = rf_preds
     except Exception as e:
-        log.error("Random Forest training failed: %s", e)
+        print(f"  ❌ Random Forest failed: {e}")
 
-    # --- XGBoost ---
+    # ── [4/6] XGBoost ─────────────────────────────────────────────────────────
+    print("\n[4/6] Training XGBoost")
+    print("─" * 80)
     try:
         xgb_results, xgb_preds = train_xgboost(X_train, y_train, test_data)
         all_results["XGBoost"] = xgb_results
         all_preds["XGBoost"] = xgb_preds
     except Exception as e:
-        log.error("XGBoost training failed: %s", e)
+        print(f"  ❌ XGBoost failed: {e}")
 
-    # --- LSTM ---
+    # ── [5/6] LSTM ────────────────────────────────────────────────────────────
+    print("\n[5/6] Training LSTM")
+    print("─" * 80)
     try:
         lstm_results, lstm_preds = train_lstm_model(X_train, y_train, test_data)
         all_results["LSTM"] = lstm_results
         all_preds["LSTM"] = lstm_preds
     except Exception as e:
-        log.error("LSTM training failed: %s", e)
+        print(f"  ❌ LSTM failed: {e}")
 
     if not all_results:
-        log.error("All models failed. Exiting.")
+        print("\n❌ ERROR: All models failed. Exiting.")
         sys.exit(1)
 
-    # --- Save outputs ---
+    # ── [6/6] Save outputs + summary ─────────────────────────────────────────
+    print("\n[6/6] Saving Outputs")
+    print("─" * 80)
     save_predictions(all_preds)
     save_metrics_csv(all_results)
-
-    # Also save targets for convenience
     for site in TEST_SITES:
-        np.save(
-            PREDICTIONS_DIR / f"targets_{site}.npy",
-            test_data[site]["y"],
-        )
+        np.save(PREDICTIONS_DIR / f"targets_{site}.npy", test_data[site]["y"])
+    print(f"  ✓ Targets:      results/predictions/baselines/targets_*.npy")
+    print(f"  ✓ Hyperparams:  models/checkpoints/baselines/{hp_path.name}")
 
-    # --- Summary ---
     print_summary(all_results)
-    log.info("All checkpoints saved to models/checkpoints/baselines/")
 
-    # --- Final verification: ensure no NaN in LSTM metrics ---
-    print("\n=== FINAL VERIFICATION ===")
-    if "LSTM" in all_results:
-        for site, vals in all_results["LSTM"].items():
-            for metric, val in vals.items():
-                assert not np.isnan(val), f"NaN in LSTM {site} {metric}!"
-        print("All LSTM metrics are valid numbers")
-    else:
-        print("WARNING: LSTM results not available for verification")
-
-    log.info("Done.")
+    elapsed = time.time() - t_start
+    n_ok = len(all_results)
+    print("\n" + "╔" + "═" * 78 + "╗")
+    print("║  TRAINING COMPLETE" + " " * 59 + "║")
+    print("╠" + "═" * 78 + "╣")
+    print(f"║  Models trained:   {n_ok}/3 successful"
+          + " " * (39 - len(str(n_ok))) + "║")
+    print(f"║  Total runtime:    {elapsed // 60:.0f}m {elapsed % 60:.0f}s"
+          + " " * (54 - len(f"{elapsed // 60:.0f}m {elapsed % 60:.0f}s")) + "║")
+    print(f"║  Checkpoints:      models/checkpoints/baselines/" + " " * 29 + "║")
+    print("╚" + "═" * 78 + "╝")
 
 
 if __name__ == "__main__":

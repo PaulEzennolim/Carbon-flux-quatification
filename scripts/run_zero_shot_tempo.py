@@ -104,7 +104,7 @@ def load_test_data():
             "X": np.array(X),
             "y": np.array(y),
         }
-        print(f"  {site}: {len(X)} sequences ({len(nee)} timesteps)")
+        print(f"  ✓ {site:<10}  {len(X):>6,} sequences  ({len(nee):,} timesteps)")
 
     return test_data
 
@@ -115,8 +115,6 @@ def load_test_data():
 def load_tempo_model(device):
     """Load pretrained TEMPO-80M from HuggingFace."""
     cache_dir = str(PROJECT_ROOT / "models" / "checkpoints" / "tempo_zero_shot")
-    print(f"  Cache directory: {cache_dir}")
-
     model = TEMPO.load_pretrained_model(
         device=device,
         repo_id="Melady/TEMPO",
@@ -172,66 +170,66 @@ def zero_shot_predict(model, X, device, batch_size=BATCH_SIZE):
 # Main
 # ---------------------------------------------------------------------------
 def main():
-    print("=" * 60)
-    print("TEMPO ZERO-SHOT INFERENCE")
-    print("=" * 60)
+    from datetime import datetime
+    t_start = time.time()
+
+    print("=" * 80)
+    print("TEMPO ZERO-SHOT INFERENCE — CARBON FLUX FORECASTING")
+    print(f"Timestamp:   {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Config:      lookback={LOOKBACK}  horizon={HORIZON}  batch={BATCH_SIZE}")
+    print("=" * 80)
 
     device = get_device()
     print(f"\nDevice: {device}")
 
-    # --- Load test data ---
-    print("\nLoading test site NEE data...")
+    # ── [1/4] Load test data ──────────────────────────────────────────────────
+    print("\n[1/4] Loading Test Site Data")
+    print("─" * 80)
     test_data = load_test_data()
 
-    # --- Load model ---
-    print("\nLoading pretrained TEMPO-80M...")
+    # ── [2/4] Load model ──────────────────────────────────────────────────────
+    print("\n[2/4] Loading Pretrained TEMPO-80M")
+    print("─" * 80)
     model = load_tempo_model(device)
-    print("  Model loaded successfully.")
+    print("  ✓ TEMPO-80M loaded (cache: models/checkpoints/tempo_zero_shot/)")
 
-    # --- Inference ---
+    # ── [3/4] Zero-shot inference ─────────────────────────────────────────────
+    print("\n[3/4] Running Zero-Shot Inference")
+    print("─" * 80)
     PREDICTIONS_DIR.mkdir(parents=True, exist_ok=True)
     METRICS_DIR.mkdir(parents=True, exist_ok=True)
 
     all_metrics = {}
+    print(f"\n  {'Site':<10} {'RMSE':>8} {'MAE':>8} {'R²':>8}  {'Time':>8}")
+    print(f"  {'─'*10} {'─'*8} {'─'*8} {'─'*8}  {'─'*8}")
     for site in TEST_SITES:
         X_test = test_data[site]["X"]
         y_test = test_data[site]["y"]
 
-        print(f"\nRunning zero-shot inference on {site} "
-              f"({len(X_test)} samples, batch_size={BATCH_SIZE})...")
         t0 = time.time()
         preds = zero_shot_predict(model, X_test, device)
         elapsed = time.time() - t0
-        print(f"  Completed in {elapsed:.1f}s")
 
-        # Metrics
         metrics = compute_metrics(y_test, preds)
         all_metrics[site] = metrics
-        print(f"  {site}:  RMSE={metrics['RMSE']:.4f}  "
-              f"MAE={metrics['MAE']:.4f}  R2={metrics['R2']:.4f}")
+        print(f"  {site:<10} {metrics['RMSE']:>8.4f} {metrics['MAE']:>8.4f} "
+              f"{metrics['R2']:>8.4f}  {elapsed:>6.1f}s")
 
-        # Save predictions
         pred_path = PREDICTIONS_DIR / f"tempo_zero_shot_preds_{site}.npy"
         np.save(pred_path, preds)
-        print(f"  Predictions saved: {pred_path.name}")
 
-    # --- Save metrics ---
+    # ── [4/4] Save outputs ────────────────────────────────────────────────────
+    print("\n[4/4] Saving Outputs")
+    print("─" * 80)
     metrics_path = METRICS_DIR / "tempo_zero_shot_metrics.json"
     with open(metrics_path, "w") as f:
         json.dump(all_metrics, f, indent=2)
-    print(f"\nMetrics saved: {metrics_path}")
+    print(f"  ✓ Metrics:      results/metrics/tempo_zero_shot_metrics.json")
+    print(f"  ✓ Predictions:  results/predictions/tempo_zero_shot_preds_*.npy")
 
-    # --- Summary ---
-    print("\n" + "=" * 60)
-    print("ZERO-SHOT RESULTS SUMMARY")
-    print("=" * 60)
-    print(f"{'Site':<10} {'RMSE':>10} {'MAE':>10} {'R2':>10}")
-    print("-" * 42)
-    for site in TEST_SITES:
-        m = all_metrics[site]
-        print(f"{site:<10} {m['RMSE']:>10.4f} {m['MAE']:>10.4f} {m['R2']:>10.4f}")
-
-    print("\nDone.")
+    elapsed_total = time.time() - t_start
+    m, s = divmod(elapsed_total, 60)
+    print(f"\n  ⏱  Total runtime: {m:.0f}m {s:.0f}s")
 
 
 if __name__ == "__main__":

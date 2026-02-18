@@ -115,25 +115,25 @@ def create_sequences(series):
 
 def load_all_data():
     """Load univariate NEE sequences for training and test sites."""
-    print("Loading training sites...")
     train_X_list, train_y_list = [], []
     for site in TRAIN_SITES:
         nee = load_nee_series(site)
         X, y = create_sequences(nee)
         train_X_list.append(X)
         train_y_list.append(y)
-        print(f"  {site}: {len(X)} sequences ({len(nee)} timesteps)")
+        print(f"  ✓ {site:<10}  {len(X):>6,} sequences  ({len(nee):,} timesteps)")
 
     train_X = np.concatenate(train_X_list)
     train_y = np.concatenate(train_y_list)
 
-    print("\nLoading test sites...")
+    for site in TEST_SITES:
+        pass  # test sites loaded below (separate display section)
+
     test_data = {}
     for site in TEST_SITES:
         nee = load_nee_series(site)
         X, y = create_sequences(nee)
         test_data[site] = {"X": X, "y": y}
-        print(f"  {site}: {len(X)} sequences ({len(nee)} timesteps)")
 
     return train_X, train_y, test_data
 
@@ -201,7 +201,7 @@ def fine_tune(model, train_X, train_y, device):
     split_idx = int(len(train_X) * 0.8)
     X_trn, X_val = train_X[:split_idx], train_X[split_idx:]
     y_trn, y_val = train_y[:split_idx], train_y[split_idx:]
-    print(f"  Train: {len(X_trn)} | Val: {len(X_val)} sequences")
+    print(f"  Split:  {len(X_trn):,} train  │  {len(X_val):,} val sequences (80/20)")
 
     # Prepare tensors — TEMPO expects [B, L, 1]
     train_dataset = TensorDataset(
@@ -300,22 +300,22 @@ def fine_tune(model, train_X, train_y, device):
             wait += 1
 
         print(
-            f"  Epoch [{epoch+1:2d}/{EPOCHS}] "
-            f"Train Loss: {avg_train:.4f} | "
-            f"Val Loss: {avg_val:.4f} | "
-            f"Best: {best_val_loss:.4f}{marker}"
+            f"  Epoch {epoch+1:3d}/{EPOCHS}  │  "
+            f"train={avg_train:.4f}  val={avg_val:.4f}  "
+            f"best={best_val_loss:.4f}{marker}"
         )
 
         # Early stopping
         if wait >= PATIENCE:
-            print(f"\n  Early stopping at epoch {epoch+1} "
+            print(f"\n  ⚠ Early stopping at epoch {epoch+1} "
                   f"(no improvement for {PATIENCE} epochs)")
             stopped_epoch = epoch + 1
             break
 
     elapsed = time.time() - t0
-    print(f"\n  Fine-tuning completed in {elapsed:.1f}s")
-    print(f"  Best epoch: {best_epoch+1} (val_loss={best_val_loss:.6f})")
+    m, s = divmod(elapsed, 60)
+    print(f"\n  ✓ Completed in {m:.0f}m {s:.0f}s")
+    print(f"  ✓ Best epoch: {best_epoch+1}  (val_loss={best_val_loss:.6f})")
 
     # Restore best model
     if best_state is not None:
@@ -404,70 +404,83 @@ def print_comparison(ft_metrics):
 # Main
 # ---------------------------------------------------------------------------
 def main():
-    print("=" * 64)
+    from datetime import datetime
+    t_start = time.time()
+
+    print("=" * 80)
     print("TEMPO FINE-TUNING FOR CARBON FLUX FORECASTING")
-    print("=" * 64)
+    print(f"Timestamp:  {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Config:     epochs={EPOCHS}  lr={LR}  patience={PATIENCE}  "
+          f"batch={BATCH_SIZE}")
+    print("=" * 80)
 
     device = get_device()
     print(f"\nDevice: {device}")
 
-    # --- Load data ---
-    print("\nLoading univariate NEE data...")
+    # ── [1/5] Load data ───────────────────────────────────────────────────────
+    print("\n[1/5] Loading Univariate NEE Data")
+    print("─" * 80)
     train_X, train_y, test_data = load_all_data()
-    print(f"\nTotal training: {len(train_X)} sequences")
+    print(f"  ✓ Total training sequences: {len(train_X):,}")
+    for site in TEST_SITES:
+        print(f"  ✓ Test {site}:   {len(test_data[site]['X']):,} sequences")
 
-    # --- Load pretrained TEMPO ---
-    print("\nLoading pretrained TEMPO-80M...")
+    # ── [2/5] Load pretrained TEMPO ───────────────────────────────────────────
+    print("\n[2/5] Loading Pretrained TEMPO-80M")
+    print("─" * 80)
     model = load_tempo_model(device)
-    print("  Model loaded successfully.")
+    print("  ✓ TEMPO-80M loaded (cache: models/checkpoints/tempo_zero_shot/)")
 
-    # --- Fine-tune ---
-    print(f"\nFine-tuning (epochs={EPOCHS}, lr={LR}, patience={PATIENCE})...")
+    # ── [3/5] Fine-tune ───────────────────────────────────────────────────────
+    print("\n[3/5] Fine-Tuning")
+    print("─" * 80)
     model, train_losses, val_losses, best_epoch, stopped_epoch = fine_tune(
         model, train_X, train_y, device
     )
 
-    # --- Learning curve ---
-    print("\nGenerating learning curve plot...")
-    plot_learning_curve(train_losses, val_losses, best_epoch, stopped_epoch)
-
-    # --- Evaluate on test sites ---
-    print("\nEvaluating fine-tuned model on test sites...")
+    # ── [4/5] Evaluate ────────────────────────────────────────────────────────
+    print("\n[4/5] Evaluating on Test Sites")
+    print("─" * 80)
     PREDICTIONS_DIR.mkdir(parents=True, exist_ok=True)
     METRICS_DIR.mkdir(parents=True, exist_ok=True)
 
     ft_metrics = {}
+    print(f"\n  {'Site':<10} {'RMSE':>8} {'MAE':>8} {'R²':>8}  {'Time':>8}")
+    print(f"  {'─'*10} {'─'*8} {'─'*8} {'─'*8}  {'─'*8}")
     for site in TEST_SITES:
         X_test = test_data[site]["X"]
         y_test = test_data[site]["y"]
 
-        print(f"\n  Predicting {site} ({len(X_test)} samples)...")
         t0 = time.time()
         preds = predict_batched(model, X_test, device)
         elapsed = time.time() - t0
-        print(f"  Completed in {elapsed:.1f}s")
 
         metrics = compute_metrics(y_test, preds)
         ft_metrics[site] = metrics
-        print(f"  {site}:  RMSE={metrics['RMSE']:.4f}  "
-              f"MAE={metrics['MAE']:.4f}  R2={metrics['R2']:.4f}")
+        print(f"  {site:<10} {metrics['RMSE']:>8.4f} {metrics['MAE']:>8.4f} "
+              f"{metrics['R2']:>8.4f}  {elapsed:>6.1f}s")
 
-        # Save predictions
         pred_path = PREDICTIONS_DIR / f"tempo_fine_tuned_preds_{site}.npy"
         np.save(pred_path, preds)
-        print(f"  Predictions saved: {pred_path.name}")
 
-    # --- Save metrics ---
+    # ── [5/5] Save outputs ────────────────────────────────────────────────────
+    print("\n[5/5] Saving Outputs")
+    print("─" * 80)
     metrics_path = METRICS_DIR / "tempo_fine_tuned_metrics.json"
     with open(metrics_path, "w") as f:
         json.dump(ft_metrics, f, indent=2)
-    print(f"\nMetrics saved: {metrics_path}")
+    print(f"  ✓ Metrics:      results/metrics/tempo_fine_tuned_metrics.json")
+    print(f"  ✓ Predictions:  results/predictions/tempo_fine_tuned_preds_*.npy")
+    print(f"  ✓ Checkpoint:   models/checkpoints/tempo_fine_tuned/best_model.pth")
 
-    # --- Comparison ---
+    plot_learning_curve(train_losses, val_losses, best_epoch, stopped_epoch)
+    print(f"  ✓ Learning curve: figures/tempo_learning_curve.png")
+
     print_comparison(ft_metrics)
 
-    print(f"\nCheckpoint: {CHECKPOINT_DIR / 'best_model.pth'}")
-    print("Done.")
+    elapsed_total = time.time() - t_start
+    m, s = divmod(elapsed_total, 60)
+    print(f"\n  ⏱  Total runtime: {m:.0f}m {s:.0f}s")
 
 
 if __name__ == "__main__":
