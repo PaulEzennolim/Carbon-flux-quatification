@@ -1,3 +1,39 @@
+"""
+TEMPO Fine-Tuning Script for Carbon Flux Prediction
+====================================================
+Fine-tunes the pre-trained TEMPO-80M foundation model on carbon flux data
+from 5 European EC tower sites (FI-Lom, GL-ZaF, IE-Cra, DE-Akm, FR-LGt).
+Evaluates cross-site generalization on held-out test sites (UK-AMo, SE-Htm).
+
+TEMPO (Temporal-Spatial Prompt-based Transformer) is a foundation model
+pre-trained on diverse time series datasets. This script adapts it to
+carbon flux forecasting through domain-specific fine-tuning.
+
+Workflow:
+---------
+1. Load pre-trained TEMPO-80M from HuggingFace (Melady/TEMPO)
+2. Extract univariate NEE time series from multivariate EC tower data
+3. Fine-tune with 80/20 temporal train/validation split
+4. Early stopping based on validation loss (patience=10 epochs)
+5. Evaluate on UK-AMo (wetland) and SE-Htm (forest) test sites
+6. Compare with zero-shot baseline performance
+7. Save model checkpoint, predictions, metrics, and learning curves
+
+Usage:
+------
+    conda activate tempo
+    python scripts/fine_tune_tempo.py
+
+Configuration:
+--------------
+Hyperparameters can be modified in the script:
+- Learning rate: 1e-4 (AdamW optimizer)
+- Batch size: 32
+- Epochs: 50 (with early stopping)
+- Gradient clipping: max_norm=1.0
+- Validation split: 20%
+"""
+
 from tempo.data_provider.data_factory import data_provider
 from tempo.utils.tools import EarlyStopping, adjust_learning_rate, visual, vali, test
 from torch.utils.data import Subset
