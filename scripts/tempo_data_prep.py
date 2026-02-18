@@ -389,11 +389,6 @@ def main():
     print(f"\nCross-site medians saved to {medians_path}")
 
     print("\nData saved successfully!")
-    print("\nNext steps:")
-    print("1. Run zero-shot TEMPO inference (no training)")
-    print("2. Fine-tune TEMPO on your training data")
-    print("3. Compare with baseline models (RF, XGBoost)")
-    print("4. Evaluate cross-site generalization")
 
 if __name__ == "__main__":
     main()
