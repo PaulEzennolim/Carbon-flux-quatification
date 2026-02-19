@@ -14,11 +14,12 @@ Usage:
 import sys
 import json
 import time
-from pathlib import Path
-
 import numpy as np
 import torch
+
+from pathlib import Path
 from torch.utils.data import DataLoader, TensorDataset
+from tempo.models.TEMPO import TEMPO
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -27,12 +28,6 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = PROJECT_ROOT / "data" / "processed"
 PREDICTIONS_DIR = PROJECT_ROOT / "results" / "predictions"
 METRICS_DIR = PROJECT_ROOT / "results" / "metrics"
-
-# Add TEMPO repository to path
-TEMPO_DIR = PROJECT_ROOT.parent / "TEMPO"
-sys.path.insert(0, str(TEMPO_DIR))
-
-from tempo.models.TEMPO import TEMPO
 
 # ---------------------------------------------------------------------------
 # Constants

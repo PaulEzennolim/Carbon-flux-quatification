@@ -262,7 +262,9 @@ def train_lstm_model(X_train, y_train, test_data):
     params = HYPERPARAMS["LSTM"]
     input_size = X_train.shape[2]
     horizon = y_train.shape[1]
-    device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+    # MPS (Apple GPU) has known shape-broadcast issues with LSTM layers in
+    # PyTorch 2.x — force CPU for stability. Expected runtime: ~30-45 min.
+    device = torch.device("cpu")
     log.info("  Architecture:  2-layer LSTM (%d units, dropout=%.1f)",
              params["hidden_size"], params["dropout"])
     log.info("  Device:        %s", device)

@@ -1,0 +1,154 @@
+{
+  "UK-AMo": {
+    "decomposition_stats": {
+      "site": "UK-AMo",
+      "n_timesteps": 9486,
+      "period": 24,
+      "total_variance": 12.871454238891602,
+      "trend_variance": 1.2199339868729497,
+      "seasonal_variance": 10.085995057344318,
+      "residual_variance": 2.164237587168831,
+      "trend_pct": 9.477825614971085,
+      "seasonal_pct": 78.3594057839175,
+      "residual_pct": 16.814242951891966,
+      "trend_range": 5.431001710515988,
+      "seasonal_amplitude": 20.69532390982505,
+      "residual_std": 1.4711347957168408
+    },
+    "validation": {
+      "site": "UK-AMo",
+      "ecosystem": "Peatland / Bog",
+      "checks": {
+        "diurnal_pattern": {
+          "pass": false,
+          "day_mean_nee": 0.056932633579229806,
+          "night_mean_nee": -0.05610841955962779,
+          "diurnal_amplitude": 1.0070202385417266,
+          "description": "FAIL: Expected daytime NEE < nighttime (photosynthesis)"
+        },
+        "seasonal_trend": {
+          "pass": false,
+          "growing_season_mean": 1.0013311345890037,
+          "dormant_season_mean": 0.03531322789529601,
+          "description": "FAIL: Expected growing season NEE < dormant season"
+        },
+        "residual_properties": {
+          "pass": true,
+          "mean": -0.030206081684952906,
+          "std": 1.4711347957168408,
+          "skewness": -0.5384115017630775,
+          "kurtosis": 16.4126448814278,
+          "lag1_autocorrelation": 0.583637516842689,
+          "description": "PASS: Residuals approximately zero-mean"
+        }
+      },
+      "checks_passed": 1,
+      "checks_total": 3
+    },
+    "tempo_comparison": {
+      "TEMPO Zero-Shot": {
+        "trend": {
+          "rmse": 0.20133903904262673,
+          "correlation": 0.33253247511643347
+        },
+        "seasonal": {
+          "rmse": 0.5386813853304778,
+          "correlation": 0.7290851473908834
+        },
+        "resid": {
+          "rmse": 0.5270269947246176,
+          "correlation": 0.04038626268544307
+        }
+      },
+      "TEMPO Fine-Tuned": {
+        "trend": {
+          "rmse": 0.20770093702168269,
+          "correlation": 0.16497645931454244
+        },
+        "seasonal": {
+          "rmse": 0.4670711227263454,
+          "correlation": 0.7708702585225145
+        },
+        "resid": {
+          "rmse": 0.5044426552175073,
+          "correlation": 0.05142701176992587
+        }
+      }
+    }
+  },
+  "SE-Htm": {
+    "decomposition_stats": {
+      "site": "SE-Htm",
+      "n_timesteps": 5438,
+      "period": 24,
+      "total_variance": 49.86366653442383,
+      "trend_variance": 3.651965930498322,
+      "seasonal_variance": 42.57789719223915,
+      "residual_variance": 6.814601345240327,
+      "trend_pct": 7.323901719054604,
+      "seasonal_pct": 85.38862091668513,
+      "residual_pct": 13.666466625625706,
+      "trend_range": 9.438661032882163,
+      "seasonal_amplitude": 31.79996195828467,
+      "residual_std": 2.610479140931857
+    },
+    "validation": {
+      "site": "SE-Htm",
+      "ecosystem": "Boreal coniferous forest",
+      "checks": {
+        "diurnal_pattern": {
+          "pass": true,
+          "day_mean_nee": -4.710729173718698,
+          "night_mean_nee": 4.71259667546719,
+          "diurnal_amplitude": 14.165940788638212,
+          "description": "PASS: Daytime NEE lower (more uptake) than nighttime"
+        },
+        "seasonal_trend": {
+          "pass": false,
+          "description": "SKIP: DOY range insufficient"
+        },
+        "residual_properties": {
+          "pass": true,
+          "mean": 0.11347292741968909,
+          "std": 2.610479140931857,
+          "skewness": 1.1451952756083654,
+          "kurtosis": 8.624934596737958,
+          "lag1_autocorrelation": 0.5521415229116938,
+          "description": "PASS: Residuals approximately zero-mean"
+        }
+      },
+      "checks_passed": 2,
+      "checks_total": 3
+    },
+    "tempo_comparison": {
+      "TEMPO Zero-Shot": {
+        "trend": {
+          "rmse": 0.45793352006451415,
+          "correlation": 0.594473499275835
+        },
+        "seasonal": {
+          "rmse": 0.9711812566824568,
+          "correlation": 0.8536837437992475
+        },
+        "resid": {
+          "rmse": 1.010524546078638,
+          "correlation": 0.12009732058336148
+        }
+      },
+      "TEMPO Fine-Tuned": {
+        "trend": {
+          "rmse": 0.41266722931542305,
+          "correlation": 0.6476798572594663
+        },
+        "seasonal": {
+          "rmse": 0.9515771783785282,
+          "correlation": 0.8108655570306467
+        },
+        "resid": {
+          "rmse": 1.0136222337294312,
+          "correlation": 0.08440568101943767
+        }
+      }
+    }
+  }
+}

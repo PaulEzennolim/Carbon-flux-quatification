@@ -1,5 +1,5 @@
 # ============================================
-# Carbon Flux Thesis - Git Ignore
+# Carbon Flux Quantification - Git Ignore
 # ============================================
 
 # ============================================
@@ -39,6 +39,7 @@ models/checkpoints/**/snapshots/
 models/checkpoints/**/refs/
 models/checkpoints/**/.locks/
 models/checkpoints/**/.lock
+models/checkpoints/
 # Trained models
 *.pkl
 *.pickle
@@ -226,13 +227,10 @@ wandb/
 !LICENSE
 
 # Keep thesis figures (finalized plots only)
-!thesis/figures/*.png
-!thesis/figures/*.pdf
-!thesis/figures/*.jpg
+!figures/*.png
+!figures/*.pdf
+!figures/*.jpg
 
 # Keep example/demo data (small samples)
 !data/examples/*.csv
 !data/samples/*.npy
-
-# Never commit model checkpoints / HF cache
-models/checkpoints/

@@ -26,6 +26,7 @@ from torch.utils.data import DataLoader, TensorDataset
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from tempo.models.TEMPO import TEMPO
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -37,12 +38,6 @@ CHECKPOINT_DIR = PROJECT_ROOT / "models" / "checkpoints" / "tempo_fine_tuned"
 PREDICTIONS_DIR = PROJECT_ROOT / "results" / "predictions"
 METRICS_DIR = PROJECT_ROOT / "results" / "metrics"
 FIGURES_DIR = PROJECT_ROOT / "figures"
-
-# Add TEMPO repository to path
-TEMPO_DIR = PROJECT_ROOT.parent / "TEMPO"
-sys.path.insert(0, str(TEMPO_DIR))
-
-from tempo.models.TEMPO import TEMPO
 
 # ---------------------------------------------------------------------------
 # Constants

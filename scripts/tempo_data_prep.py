@@ -324,25 +324,6 @@ class CarbonFluxDataProcessor:
             'test': test_data,
             'cross_site_medians': cross_site_medians
         }
-    
-    def prepare_for_tempo(self, X, y):
-        """
-        Convert numpy arrays to format expected by TEMPO.
-        
-        TEMPO expects either:
-        1. Single time series: shape (T,) for univariate or (T, F) for multivariate
-        2. Batch of series: list of arrays
-        """
-        # For fine-tuning, we'll use the multivariate approach
-        # Each sequence in X is (lookback, features)
-        
-        # Option 1: Use only target variable (NEE) - univariate
-        # This is simpler and TEMPO was primarily trained on univariate series
-        
-        # Option 2: Use all features - multivariate
-        # TEMPO can handle this but may need more careful configuration
-        
-        return X, y
 
 
 # Example usage for your thesis

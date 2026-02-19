@@ -1,8 +1,5 @@
-# Auto detect text files and perform LF normalization
-* text=auto
-
 # ============================================
-# Carbon Flux Thesis - Git Attributes
+# Carbon Flux Quantification - Git Attributes
 # ============================================
 
 # ============================================
@@ -88,15 +85,6 @@
 *.tar binary
 *.7z binary
 *.rar binary
-
-# ============================================
-# Git LFS (if you decide to use it later)
-# ============================================
-# Uncomment these if you set up Git LFS for large files
-# *.npy filter=lfs diff=lfs merge=lfs -text
-# *.pth filter=lfs diff=lfs merge=lfs -text
-# *.csv filter=lfs diff=lfs merge=lfs -text
-# data/raw/** filter=lfs diff=lfs merge=lfs -text
 
 # ============================================
 # LINE ENDINGS

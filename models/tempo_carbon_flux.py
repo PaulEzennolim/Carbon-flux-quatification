@@ -32,9 +32,6 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-# Add TEMPO repository to path
-TEMPO_DIR = Path(__file__).resolve().parent.parent.parent / 'TEMPO'
-sys.path.insert(0, str(TEMPO_DIR))
 
 from tempo.models.TEMPO import TEMPO
 
@@ -128,7 +125,10 @@ def load_all_data():
 # ---------------------------------------------------------------------------
 def load_tempo_model(device):
     """Load the pretrained TEMPO-80M model from HuggingFace."""
-    cache_dir = str(TEMPO_DIR / 'checkpoints' / 'TEMPO_checkpoints')
+    # Use project-relative cache directory
+    project_root = Path(__file__).resolve().parent.parent
+    cache_dir = str(project_root / 'checkpoints' / 'TEMPO_checkpoints')
+    
     model = TEMPO.load_pretrained_model(
         device=device,
         repo_id="Melady/TEMPO",
