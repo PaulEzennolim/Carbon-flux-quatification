@@ -1,0 +1,23 @@
+\begin{table}[h]
+\centering
+\caption{Statistical Significance of Carbon Flux Model Comparisons}
+\begin{tabular}{llccc}
+\hline
+Site & Comparison & $\Delta$ RMSE & t-test & DM test \\
+\hline
+UK-AMo & TEMPO FT vs XGBoost & -0.36*** & p<0.001 & p<0.001 \\
+ & TEMPO FT vs Random Forest & -0.04*** & p<0.001 & p<0.001 \\
+ & TEMPO FT vs LSTM & -0.61*** & p<0.001 & p<0.001 \\
+ & TEMPO FT vs TEMPO Zero-Shot & -0.56*** & p<0.001 & p<0.001 \\
+ & TEMPO Zero-Shot vs XGBoost & +0.19*** & p<0.001 & p<0.001 \\
+\hline
+SE-Htm & TEMPO FT vs XGBoost & -2.38*** & p<0.001 & p<0.001 \\
+ & TEMPO FT vs Random Forest & -2.42*** & p<0.001 & p<0.001 \\
+ & TEMPO FT vs LSTM & -2.61*** & p<0.001 & p<0.001 \\
+ & TEMPO FT vs TEMPO Zero-Shot & +0.17*** & p<0.001 & p<0.001 \\
+ & TEMPO Zero-Shot vs XGBoost & -2.56*** & p<0.001 & p<0.001 \\
+\hline
+\multicolumn{5}{l}{\footnotesize *p<0.05, **p<0.01, ***p<0.001. $\Delta$RMSE = RMSE(model 1) $-$ RMSE(model 2).} \\
+\end{tabular}
+\label{tab:significance}
+\end{table}
