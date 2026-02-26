@@ -91,6 +91,20 @@ def significance_stars(p: float) -> str:
     return "ns"
 
 
+def format_p_value(p_value: float, threshold: float = 0.001) -> str:
+    """Format p-value for scientific reporting.
+
+    Prevents underflow zeros (e.g. 0.0 from p < 1e-300) from appearing in
+    output files.  Any p below `threshold` is reported as '< 0.001'.
+    """
+    if p_value < threshold:
+        return "< 0.001"
+    elif p_value < 0.01:
+        return f"{p_value:.4f}"
+    else:
+        return f"{p_value:.3f}"
+
+
 # ---------------------------------------------------------------------------
 # StatisticalAnalyzer
 # ---------------------------------------------------------------------------
@@ -221,9 +235,10 @@ class StatisticalAnalyzer:
             direction = "is outperformed by"
         sig_str = "significantly " if significant else "does NOT significantly "
         stars = significance_stars(p_val)
+        p_str = "p<0.001" if p_val < 0.001 else f"p={p_val:.3e}"
         interp = (
             f"{name1} {sig_str}{direction} {name2} "
-            f"(p={p_val:.3e} {stars})"
+            f"({p_str} {stars})"
         )
 
         return {
@@ -313,16 +328,17 @@ class StatisticalAnalyzer:
         h0_rejected = p_two < self.alpha
         stars = significance_stars(p_two)
 
+        p_two_str = "p<0.001" if p_two < 0.001 else f"p={p_two:.3e}"
         if h0_rejected:
             winner = name1 if np.mean(d) < 0 else name2
             conclusion = (
                 f"{winner} has significantly better forecast accuracy "
-                f"(MDM={mdm_stat:.3f}, p={p_two:.3e} {stars})"
+                f"(MDM={mdm_stat:.3f}, {p_two_str} {stars})"
             )
         else:
             conclusion = (
                 f"No significant difference in forecast accuracy "
-                f"(MDM={mdm_stat:.3f}, p={p_two:.3e})"
+                f"(MDM={mdm_stat:.3f}, {p_two_str})"
             )
 
         return {
@@ -686,18 +702,19 @@ class StatisticalAnalyzer:
         for site in SITES:
             for label, tt in self.ttest_results.get(site, {}).items():
                 dm = self.dm_results.get(site, {}).get(label, {})
+                p_dm_raw = dm.get("p_value_two_tailed")
                 rows.append({
                     "site": site,
                     "comparison": label,
                     "mean_diff_mae": tt["mean_diff"],
                     "t_statistic": tt["t_statistic"],
-                    "p_value_ttest": tt["p_value"],
+                    "p_value_ttest": format_p_value(tt["p_value"]),
                     "ttest_significant": tt["significant"],
                     "cohens_d": tt["cohens_d"],
                     "ci_lower": tt["ci_lower"],
                     "ci_upper": tt["ci_upper"],
                     "dm_mdm_statistic": dm.get("mdm_statistic", "N/A"),
-                    "p_value_dm": dm.get("p_value_two_tailed", "N/A"),
+                    "p_value_dm": format_p_value(p_dm_raw) if p_dm_raw is not None else "N/A",
                     "dm_h0_rejected": dm.get("h0_rejected", "N/A"),
                 })
         df = pd.DataFrame(rows)

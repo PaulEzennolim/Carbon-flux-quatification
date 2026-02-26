@@ -27,7 +27,7 @@ UK-AMo (Wetland)
   Paired t-test         : t=-186.135, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-6.498, p<0.001 ***
   Cohen's d             : 0.140 (small effect)
-  Conclusion            : TEMPO Fine-Tuned significantly outperforms Random Forest (p=0.000e+00 ***)
+  Conclusion            : TEMPO Fine-Tuned significantly outperforms Random Forest (p<0.001 ***)
 
   TEMPO Fine-Tuned vs TEMPO Zero-Shot
   ────────────────────────────────────────────────────────────
@@ -35,7 +35,7 @@ UK-AMo (Wetland)
   Paired t-test         : t=-198.881, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-37.896, p<0.001 ***
   Cohen's d             : 0.147 (small effect)
-  Conclusion            : TEMPO Fine-Tuned significantly outperforms TEMPO Zero-Shot (p=0.000e+00 ***)
+  Conclusion            : TEMPO Fine-Tuned significantly outperforms TEMPO Zero-Shot (p<0.001 ***)
 
   TEMPO Zero-Shot vs Random Forest
   ────────────────────────────────────────────────────────────
@@ -43,7 +43,7 @@ UK-AMo (Wetland)
   Paired t-test         : t=30.357, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=31.699, p<0.001 ***
   Cohen's d             : 0.030 (small effect)
-  Conclusion            : TEMPO Zero-Shot significantly is outperformed by Random Forest (p=2.609e-202 ***)
+  Conclusion            : TEMPO Zero-Shot significantly is outperformed by Random Forest (p<0.001 ***)
 
   TEMPO Fine-Tuned vs XGBoost
   ────────────────────────────────────────────────────────────
@@ -51,7 +51,7 @@ UK-AMo (Wetland)
   Paired t-test         : t=-421.585, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-41.658, p<0.001 ***
   Cohen's d             : 0.337 (small-medium effect)
-  Conclusion            : TEMPO Fine-Tuned significantly outperforms XGBoost (p=0.000e+00 ***)
+  Conclusion            : TEMPO Fine-Tuned significantly outperforms XGBoost (p<0.001 ***)
 
   TEMPO Fine-Tuned vs LSTM
   ────────────────────────────────────────────────────────────
@@ -59,7 +59,7 @@ UK-AMo (Wetland)
   Paired t-test         : t=-266.716, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-43.966, p<0.001 ***
   Cohen's d             : 0.259 (small-medium effect)
-  Conclusion            : TEMPO Fine-Tuned significantly outperforms LSTM (p=0.000e+00 ***)
+  Conclusion            : TEMPO Fine-Tuned significantly outperforms LSTM (p<0.001 ***)
 
   TEMPO Zero-Shot vs XGBoost
   ────────────────────────────────────────────────────────────
@@ -67,7 +67,7 @@ UK-AMo (Wetland)
   Paired t-test         : t=-159.147, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=14.877, p<0.001 ***
   Cohen's d             : 0.145 (small effect)
-  Conclusion            : TEMPO Zero-Shot significantly outperforms XGBoost (p=0.000e+00 ***)
+  Conclusion            : TEMPO Zero-Shot significantly outperforms XGBoost (p<0.001 ***)
 
   TEMPO Zero-Shot vs LSTM
   ────────────────────────────────────────────────────────────
@@ -75,7 +75,7 @@ UK-AMo (Wetland)
   Paired t-test         : t=-91.042, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-3.506, p<0.001 ***
   Cohen's d             : 0.097 (small effect)
-  Conclusion            : TEMPO Zero-Shot significantly outperforms LSTM (p=0.000e+00 ***)
+  Conclusion            : TEMPO Zero-Shot significantly outperforms LSTM (p<0.001 ***)
 
   XGBoost vs Random Forest
   ────────────────────────────────────────────────────────────
@@ -83,7 +83,7 @@ UK-AMo (Wetland)
   Paired t-test         : t=320.602, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=46.529, p<0.001 ***
   Cohen's d             : 0.210 (small-medium effect)
-  Conclusion            : XGBoost significantly is outperformed by Random Forest (p=0.000e+00 ***)
+  Conclusion            : XGBoost significantly is outperformed by Random Forest (p<0.001 ***)
 
   XGBoost vs LSTM
   ────────────────────────────────────────────────────────────
@@ -91,7 +91,7 @@ UK-AMo (Wetland)
   Paired t-test         : t=37.222, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-19.000, p<0.001 ***
   Cohen's d             : 0.039 (small effect)
-  Conclusion            : XGBoost significantly is outperformed by LSTM (p=5.185e-303 ***)
+  Conclusion            : XGBoost significantly is outperformed by LSTM (p<0.001 ***)
 
   Random Forest vs LSTM
   ────────────────────────────────────────────────────────────
@@ -99,7 +99,7 @@ UK-AMo (Wetland)
   Paired t-test         : t=-149.391, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-40.735, p<0.001 ***
   Cohen's d             : 0.144 (small effect)
-  Conclusion            : Random Forest significantly outperforms LSTM (p=0.000e+00 ***)
+  Conclusion            : Random Forest significantly outperforms LSTM (p<0.001 ***)
 
 ──────────────────────────────────────────────────────────────────────
 SE-Htm (Forest)
@@ -122,7 +122,7 @@ SE-Htm (Forest)
   Paired t-test         : t=-402.211, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-108.151, p<0.001 ***
   Cohen's d             : 0.553 (medium effect)
-  Conclusion            : TEMPO Fine-Tuned significantly outperforms XGBoost (p=0.000e+00 ***)
+  Conclusion            : TEMPO Fine-Tuned significantly outperforms XGBoost (p<0.001 ***)
 
   TEMPO Fine-Tuned vs TEMPO Zero-Shot
   ────────────────────────────────────────────────────────────
@@ -130,7 +130,7 @@ SE-Htm (Forest)
   Paired t-test         : t=75.218, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=21.319, p<0.001 ***
   Cohen's d             : 0.064 (small effect)
-  Conclusion            : TEMPO Fine-Tuned significantly is outperformed by TEMPO Zero-Shot (p=0.000e+00 ***)
+  Conclusion            : TEMPO Fine-Tuned significantly is outperformed by TEMPO Zero-Shot (p<0.001 ***)
 
   TEMPO Zero-Shot vs XGBoost
   ────────────────────────────────────────────────────────────
@@ -138,7 +138,7 @@ SE-Htm (Forest)
   Paired t-test         : t=-400.227, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-107.662, p<0.001 ***
   Cohen's d             : 0.608 (medium effect)
-  Conclusion            : TEMPO Zero-Shot significantly outperforms XGBoost (p=0.000e+00 ***)
+  Conclusion            : TEMPO Zero-Shot significantly outperforms XGBoost (p<0.001 ***)
 
   TEMPO Fine-Tuned vs Random Forest
   ────────────────────────────────────────────────────────────
@@ -146,7 +146,7 @@ SE-Htm (Forest)
   Paired t-test         : t=-384.805, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-105.315, p<0.001 ***
   Cohen's d             : 0.534 (medium effect)
-  Conclusion            : TEMPO Fine-Tuned significantly outperforms Random Forest (p=0.000e+00 ***)
+  Conclusion            : TEMPO Fine-Tuned significantly outperforms Random Forest (p<0.001 ***)
 
   TEMPO Fine-Tuned vs LSTM
   ────────────────────────────────────────────────────────────
@@ -154,7 +154,7 @@ SE-Htm (Forest)
   Paired t-test         : t=-386.281, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-79.264, p<0.001 ***
   Cohen's d             : 0.553 (medium effect)
-  Conclusion            : TEMPO Fine-Tuned significantly outperforms LSTM (p=0.000e+00 ***)
+  Conclusion            : TEMPO Fine-Tuned significantly outperforms LSTM (p<0.001 ***)
 
   TEMPO Zero-Shot vs Random Forest
   ────────────────────────────────────────────────────────────
@@ -162,7 +162,7 @@ SE-Htm (Forest)
   Paired t-test         : t=-385.416, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-106.319, p<0.001 ***
   Cohen's d             : 0.588 (medium effect)
-  Conclusion            : TEMPO Zero-Shot significantly outperforms Random Forest (p=0.000e+00 ***)
+  Conclusion            : TEMPO Zero-Shot significantly outperforms Random Forest (p<0.001 ***)
 
   TEMPO Zero-Shot vs LSTM
   ────────────────────────────────────────────────────────────
@@ -170,7 +170,7 @@ SE-Htm (Forest)
   Paired t-test         : t=-392.885, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-79.983, p<0.001 ***
   Cohen's d             : 0.605 (medium effect)
-  Conclusion            : TEMPO Zero-Shot significantly outperforms LSTM (p=0.000e+00 ***)
+  Conclusion            : TEMPO Zero-Shot significantly outperforms LSTM (p<0.001 ***)
 
   XGBoost vs Random Forest
   ────────────────────────────────────────────────────────────
@@ -178,7 +178,7 @@ SE-Htm (Forest)
   Paired t-test         : t=27.904, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-6.293, p<0.001 ***
   Cohen's d             : 0.009 (small effect)
-  Conclusion            : XGBoost significantly is outperformed by Random Forest (p=3.272e-171 ***)
+  Conclusion            : XGBoost significantly is outperformed by Random Forest (p<0.001 ***)
 
   XGBoost vs LSTM
   ────────────────────────────────────────────────────────────
@@ -186,7 +186,7 @@ SE-Htm (Forest)
   Paired t-test         : t=-27.461, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-11.070, p<0.001 ***
   Cohen's d             : 0.018 (small effect)
-  Conclusion            : XGBoost significantly outperforms LSTM (p=6.834e-166 ***)
+  Conclusion            : XGBoost significantly outperforms LSTM (p<0.001 ***)
 
   Random Forest vs LSTM
   ────────────────────────────────────────────────────────────
@@ -194,7 +194,7 @@ SE-Htm (Forest)
   Paired t-test         : t=-39.572, p<0.001 ***
   Diebold-Mariano (MDM) : MDM=-9.088, p<0.001 ***
   Cohen's d             : 0.027 (small effect)
-  Conclusion            : Random Forest significantly outperforms LSTM (p=0.000e+00 ***)
+  Conclusion            : Random Forest significantly outperforms LSTM (p<0.001 ***)
 
 ======================================================================
 End of Statistical Analysis

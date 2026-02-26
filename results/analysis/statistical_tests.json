@@ -11,7 +11,7 @@
         "cohens_d": 0.1395,
         "significant": "True",
         "stars": "***",
-        "interpretation": "TEMPO Fine-Tuned significantly outperforms Random Forest (p=0.000e+00 ***)"
+        "interpretation": "TEMPO Fine-Tuned significantly outperforms Random Forest (p<0.001 ***)"
       },
       "TEMPO Fine-Tuned vs TEMPO Zero-Shot": {
         "metric": "MAE",
@@ -23,7 +23,7 @@
         "cohens_d": 0.1468,
         "significant": "True",
         "stars": "***",
-        "interpretation": "TEMPO Fine-Tuned significantly outperforms TEMPO Zero-Shot (p=0.000e+00 ***)"
+        "interpretation": "TEMPO Fine-Tuned significantly outperforms TEMPO Zero-Shot (p<0.001 ***)"
       },
       "TEMPO Zero-Shot vs Random Forest": {
         "metric": "MAE",
@@ -35,7 +35,7 @@
         "cohens_d": 0.0304,
         "significant": "True",
         "stars": "***",
-        "interpretation": "TEMPO Zero-Shot significantly is outperformed by Random Forest (p=2.609e-202 ***)"
+        "interpretation": "TEMPO Zero-Shot significantly is outperformed by Random Forest (p<0.001 ***)"
       },
       "TEMPO Fine-Tuned vs XGBoost": {
         "metric": "MAE",
@@ -47,7 +47,7 @@
         "cohens_d": 0.3366,
         "significant": "True",
         "stars": "***",
-        "interpretation": "TEMPO Fine-Tuned significantly outperforms XGBoost (p=0.000e+00 ***)"
+        "interpretation": "TEMPO Fine-Tuned significantly outperforms XGBoost (p<0.001 ***)"
       },
       "TEMPO Fine-Tuned vs LSTM": {
         "metric": "MAE",
@@ -59,7 +59,7 @@
         "cohens_d": 0.2593,
         "significant": "True",
         "stars": "***",
-        "interpretation": "TEMPO Fine-Tuned significantly outperforms LSTM (p=0.000e+00 ***)"
+        "interpretation": "TEMPO Fine-Tuned significantly outperforms LSTM (p<0.001 ***)"
       },
       "TEMPO Zero-Shot vs XGBoost": {
         "metric": "MAE",
@@ -71,7 +71,7 @@
         "cohens_d": 0.1452,
         "significant": "True",
         "stars": "***",
-        "interpretation": "TEMPO Zero-Shot significantly outperforms XGBoost (p=0.000e+00 ***)"
+        "interpretation": "TEMPO Zero-Shot significantly outperforms XGBoost (p<0.001 ***)"
       },
       "TEMPO Zero-Shot vs LSTM": {
         "metric": "MAE",
@@ -83,7 +83,7 @@
         "cohens_d": 0.0972,
         "significant": "True",
         "stars": "***",
-        "interpretation": "TEMPO Zero-Shot significantly outperforms LSTM (p=0.000e+00 ***)"
+        "interpretation": "TEMPO Zero-Shot significantly outperforms LSTM (p<0.001 ***)"
       },
       "XGBoost vs Random Forest": {
         "metric": "MAE",
@@ -95,7 +95,7 @@
         "cohens_d": 0.2096,
         "significant": "True",
         "stars": "***",
-        "interpretation": "XGBoost significantly is outperformed by Random Forest (p=0.000e+00 ***)"
+        "interpretation": "XGBoost significantly is outperformed by Random Forest (p<0.001 ***)"
       },
       "XGBoost vs LSTM": {
         "metric": "MAE",
@@ -107,7 +107,7 @@
         "cohens_d": 0.0394,
         "significant": "True",
         "stars": "***",
-        "interpretation": "XGBoost significantly is outperformed by LSTM (p=5.185e-303 ***)"
+        "interpretation": "XGBoost significantly is outperformed by LSTM (p<0.001 ***)"
       },
       "Random Forest vs LSTM": {
         "metric": "MAE",
@@ -119,20 +119,20 @@
         "cohens_d": 0.1436,
         "significant": "True",
         "stars": "***",
-        "interpretation": "Random Forest significantly outperforms LSTM (p=0.000e+00 ***)"
+        "interpretation": "Random Forest significantly outperforms LSTM (p<0.001 ***)"
       }
     },
     "diebold_mariano": {
       "TEMPO Fine-Tuned vs Random Forest": {
         "dm_statistic": -6.4989,
         "mdm_statistic": -6.4982,
-        "p_value_two_tailed": 8.13158015334614e-11,
-        "p_value_one_tailed": 4.06579007667307e-11,
+        "p_value_two_tailed": 8.131580153345933e-11,
+        "p_value_one_tailed": 4.0657900766729666e-11,
         "h0_rejected": true,
         "stars": "***",
         "loss_differential_mean": -0.204627,
         "hac_std_error": 0.031486,
-        "conclusion": "TEMPO Fine-Tuned has significantly better forecast accuracy (MDM=-6.498, p=8.132e-11 ***)"
+        "conclusion": "TEMPO Fine-Tuned has significantly better forecast accuracy (MDM=-6.498, p<0.001 ***)"
       },
       "TEMPO Fine-Tuned vs TEMPO Zero-Shot": {
         "dm_statistic": -37.8998,
@@ -143,18 +143,18 @@
         "stars": "***",
         "loss_differential_mean": -2.884397,
         "hac_std_error": 0.076106,
-        "conclusion": "TEMPO Fine-Tuned has significantly better forecast accuracy (MDM=-37.896, p=0.000e+00 ***)"
+        "conclusion": "TEMPO Fine-Tuned has significantly better forecast accuracy (MDM=-37.896, p<0.001 ***)"
       },
       "TEMPO Zero-Shot vs Random Forest": {
         "dm_statistic": 31.7028,
         "mdm_statistic": 31.6993,
-        "p_value_two_tailed": 2.1262564584834805e-220,
+        "p_value_two_tailed": 2.1262564584827544e-220,
         "p_value_one_tailed": 1.0,
         "h0_rejected": true,
         "stars": "***",
         "loss_differential_mean": 2.67977,
         "hac_std_error": 0.084528,
-        "conclusion": "Random Forest has significantly better forecast accuracy (MDM=31.699, p=2.126e-220 ***)"
+        "conclusion": "Random Forest has significantly better forecast accuracy (MDM=31.699, p<0.001 ***)"
       },
       "TEMPO Fine-Tuned vs XGBoost": {
         "dm_statistic": -41.6625,
@@ -165,7 +165,7 @@
         "stars": "***",
         "loss_differential_mean": -1.802973,
         "hac_std_error": 0.043276,
-        "conclusion": "TEMPO Fine-Tuned has significantly better forecast accuracy (MDM=-41.658, p=0.000e+00 ***)"
+        "conclusion": "TEMPO Fine-Tuned has significantly better forecast accuracy (MDM=-41.658, p<0.001 ***)"
       },
       "TEMPO Fine-Tuned vs LSTM": {
         "dm_statistic": -43.9706,
@@ -176,29 +176,29 @@
         "stars": "***",
         "loss_differential_mean": -3.211276,
         "hac_std_error": 0.073032,
-        "conclusion": "TEMPO Fine-Tuned has significantly better forecast accuracy (MDM=-43.966, p=0.000e+00 ***)"
+        "conclusion": "TEMPO Fine-Tuned has significantly better forecast accuracy (MDM=-43.966, p<0.001 ***)"
       },
       "TEMPO Zero-Shot vs XGBoost": {
         "dm_statistic": 14.8786,
         "mdm_statistic": 14.8769,
-        "p_value_two_tailed": 4.719552412220012e-50,
+        "p_value_two_tailed": 4.719552412220349e-50,
         "p_value_one_tailed": 1.0,
         "h0_rejected": true,
         "stars": "***",
         "loss_differential_mean": 1.081424,
         "hac_std_error": 0.072683,
-        "conclusion": "XGBoost has significantly better forecast accuracy (MDM=14.877, p=4.720e-50 ***)"
+        "conclusion": "XGBoost has significantly better forecast accuracy (MDM=14.877, p<0.001 ***)"
       },
       "TEMPO Zero-Shot vs LSTM": {
         "dm_statistic": -3.5063,
         "mdm_statistic": -3.5059,
-        "p_value_two_tailed": 0.00045504328680393447,
-        "p_value_one_tailed": 0.00022752164340196724,
+        "p_value_two_tailed": 0.0004550432868039304,
+        "p_value_one_tailed": 0.0002275216434019652,
         "h0_rejected": true,
         "stars": "***",
         "loss_differential_mean": -0.32688,
         "hac_std_error": 0.093226,
-        "conclusion": "TEMPO Zero-Shot has significantly better forecast accuracy (MDM=-3.506, p=4.550e-04 ***)"
+        "conclusion": "TEMPO Zero-Shot has significantly better forecast accuracy (MDM=-3.506, p<0.001 ***)"
       },
       "XGBoost vs Random Forest": {
         "dm_statistic": 46.5338,
@@ -209,18 +209,18 @@
         "stars": "***",
         "loss_differential_mean": 1.598346,
         "hac_std_error": 0.034348,
-        "conclusion": "Random Forest has significantly better forecast accuracy (MDM=46.529, p=0.000e+00 ***)"
+        "conclusion": "Random Forest has significantly better forecast accuracy (MDM=46.529, p<0.001 ***)"
       },
       "XGBoost vs LSTM": {
         "dm_statistic": -19.0016,
         "mdm_statistic": -18.9995,
-        "p_value_two_tailed": 1.78749541652785e-80,
-        "p_value_one_tailed": 8.93747708263925e-81,
+        "p_value_two_tailed": 1.7874954165282067e-80,
+        "p_value_one_tailed": 8.937477082641034e-81,
         "h0_rejected": true,
         "stars": "***",
         "loss_differential_mean": -1.408303,
         "hac_std_error": 0.074115,
-        "conclusion": "XGBoost has significantly better forecast accuracy (MDM=-19.000, p=1.787e-80 ***)"
+        "conclusion": "XGBoost has significantly better forecast accuracy (MDM=-19.000, p<0.001 ***)"
       },
       "Random Forest vs LSTM": {
         "dm_statistic": -40.7398,
@@ -231,7 +231,7 @@
         "stars": "***",
         "loss_differential_mean": -3.00665,
         "hac_std_error": 0.073801,
-        "conclusion": "Random Forest has significantly better forecast accuracy (MDM=-40.735, p=0.000e+00 ***)"
+        "conclusion": "Random Forest has significantly better forecast accuracy (MDM=-40.735, p<0.001 ***)"
       }
     }
   },
@@ -247,7 +247,7 @@
         "cohens_d": 0.5534,
         "significant": "True",
         "stars": "***",
-        "interpretation": "TEMPO Fine-Tuned significantly outperforms XGBoost (p=0.000e+00 ***)"
+        "interpretation": "TEMPO Fine-Tuned significantly outperforms XGBoost (p<0.001 ***)"
       },
       "TEMPO Fine-Tuned vs TEMPO Zero-Shot": {
         "metric": "MAE",
@@ -259,7 +259,7 @@
         "cohens_d": 0.0644,
         "significant": "True",
         "stars": "***",
-        "interpretation": "TEMPO Fine-Tuned significantly is outperformed by TEMPO Zero-Shot (p=0.000e+00 ***)"
+        "interpretation": "TEMPO Fine-Tuned significantly is outperformed by TEMPO Zero-Shot (p<0.001 ***)"
       },
       "TEMPO Zero-Shot vs XGBoost": {
         "metric": "MAE",
@@ -271,7 +271,7 @@
         "cohens_d": 0.6078,
         "significant": "True",
         "stars": "***",
-        "interpretation": "TEMPO Zero-Shot significantly outperforms XGBoost (p=0.000e+00 ***)"
+        "interpretation": "TEMPO Zero-Shot significantly outperforms XGBoost (p<0.001 ***)"
       },
       "TEMPO Fine-Tuned vs Random Forest": {
         "metric": "MAE",
@@ -283,7 +283,7 @@
         "cohens_d": 0.5342,
         "significant": "True",
         "stars": "***",
-        "interpretation": "TEMPO Fine-Tuned significantly outperforms Random Forest (p=0.000e+00 ***)"
+        "interpretation": "TEMPO Fine-Tuned significantly outperforms Random Forest (p<0.001 ***)"
       },
       "TEMPO Fine-Tuned vs LSTM": {
         "metric": "MAE",
@@ -295,7 +295,7 @@
         "cohens_d": 0.5529,
         "significant": "True",
         "stars": "***",
-        "interpretation": "TEMPO Fine-Tuned significantly outperforms LSTM (p=0.000e+00 ***)"
+        "interpretation": "TEMPO Fine-Tuned significantly outperforms LSTM (p<0.001 ***)"
       },
       "TEMPO Zero-Shot vs Random Forest": {
         "metric": "MAE",
@@ -307,7 +307,7 @@
         "cohens_d": 0.5875,
         "significant": "True",
         "stars": "***",
-        "interpretation": "TEMPO Zero-Shot significantly outperforms Random Forest (p=0.000e+00 ***)"
+        "interpretation": "TEMPO Zero-Shot significantly outperforms Random Forest (p<0.001 ***)"
       },
       "TEMPO Zero-Shot vs LSTM": {
         "metric": "MAE",
@@ -319,7 +319,7 @@
         "cohens_d": 0.6049,
         "significant": "True",
         "stars": "***",
-        "interpretation": "TEMPO Zero-Shot significantly outperforms LSTM (p=0.000e+00 ***)"
+        "interpretation": "TEMPO Zero-Shot significantly outperforms LSTM (p<0.001 ***)"
       },
       "XGBoost vs Random Forest": {
         "metric": "MAE",
@@ -331,7 +331,7 @@
         "cohens_d": 0.0093,
         "significant": "True",
         "stars": "***",
-        "interpretation": "XGBoost significantly is outperformed by Random Forest (p=3.272e-171 ***)"
+        "interpretation": "XGBoost significantly is outperformed by Random Forest (p<0.001 ***)"
       },
       "XGBoost vs LSTM": {
         "metric": "MAE",
@@ -343,7 +343,7 @@
         "cohens_d": 0.0184,
         "significant": "True",
         "stars": "***",
-        "interpretation": "XGBoost significantly outperforms LSTM (p=6.834e-166 ***)"
+        "interpretation": "XGBoost significantly outperforms LSTM (p<0.001 ***)"
       },
       "Random Forest vs LSTM": {
         "metric": "MAE",
@@ -355,7 +355,7 @@
         "cohens_d": 0.0272,
         "significant": "True",
         "stars": "***",
-        "interpretation": "Random Forest significantly outperforms LSTM (p=0.000e+00 ***)"
+        "interpretation": "Random Forest significantly outperforms LSTM (p<0.001 ***)"
       }
     },
     "diebold_mariano": {
@@ -368,18 +368,18 @@
         "stars": "***",
         "loss_differential_mean": -23.779664,
         "hac_std_error": 0.219831,
-        "conclusion": "TEMPO Fine-Tuned has significantly better forecast accuracy (MDM=-108.151, p=0.000e+00 ***)"
+        "conclusion": "TEMPO Fine-Tuned has significantly better forecast accuracy (MDM=-108.151, p<0.001 ***)"
       },
       "TEMPO Fine-Tuned vs TEMPO Zero-Shot": {
         "dm_statistic": 21.3233,
         "mdm_statistic": 21.3191,
-        "p_value_two_tailed": 8.409985203855412e-101,
+        "p_value_two_tailed": 8.40998520385805e-101,
         "p_value_one_tailed": 1.0,
         "h0_rejected": true,
         "stars": "***",
         "loss_differential_mean": 1.268212,
         "hac_std_error": 0.059475,
-        "conclusion": "TEMPO Zero-Shot has significantly better forecast accuracy (MDM=21.319, p=8.410e-101 ***)"
+        "conclusion": "TEMPO Zero-Shot has significantly better forecast accuracy (MDM=21.319, p<0.001 ***)"
       },
       "TEMPO Zero-Shot vs XGBoost": {
         "dm_statistic": -107.6832,
@@ -390,7 +390,7 @@
         "stars": "***",
         "loss_differential_mean": -25.047875,
         "hac_std_error": 0.232607,
-        "conclusion": "TEMPO Zero-Shot has significantly better forecast accuracy (MDM=-107.662, p=0.000e+00 ***)"
+        "conclusion": "TEMPO Zero-Shot has significantly better forecast accuracy (MDM=-107.662, p<0.001 ***)"
       },
       "TEMPO Fine-Tuned vs Random Forest": {
         "dm_statistic": -105.3357,
@@ -401,7 +401,7 @@
         "stars": "***",
         "loss_differential_mean": -24.192909,
         "hac_std_error": 0.229674,
-        "conclusion": "TEMPO Fine-Tuned has significantly better forecast accuracy (MDM=-105.315, p=0.000e+00 ***)"
+        "conclusion": "TEMPO Fine-Tuned has significantly better forecast accuracy (MDM=-105.315, p<0.001 ***)"
       },
       "TEMPO Fine-Tuned vs LSTM": {
         "dm_statistic": -79.2798,
@@ -412,7 +412,7 @@
         "stars": "***",
         "loss_differential_mean": -26.617523,
         "hac_std_error": 0.335742,
-        "conclusion": "TEMPO Fine-Tuned has significantly better forecast accuracy (MDM=-79.264, p=0.000e+00 ***)"
+        "conclusion": "TEMPO Fine-Tuned has significantly better forecast accuracy (MDM=-79.264, p<0.001 ***)"
       },
       "TEMPO Zero-Shot vs Random Forest": {
         "dm_statistic": -106.3402,
@@ -423,7 +423,7 @@
         "stars": "***",
         "loss_differential_mean": -25.46112,
         "hac_std_error": 0.239431,
-        "conclusion": "TEMPO Zero-Shot has significantly better forecast accuracy (MDM=-106.319, p=0.000e+00 ***)"
+        "conclusion": "TEMPO Zero-Shot has significantly better forecast accuracy (MDM=-106.319, p<0.001 ***)"
       },
       "TEMPO Zero-Shot vs LSTM": {
         "dm_statistic": -79.9993,
@@ -434,40 +434,40 @@
         "stars": "***",
         "loss_differential_mean": -27.885735,
         "hac_std_error": 0.348575,
-        "conclusion": "TEMPO Zero-Shot has significantly better forecast accuracy (MDM=-79.983, p=0.000e+00 ***)"
+        "conclusion": "TEMPO Zero-Shot has significantly better forecast accuracy (MDM=-79.983, p<0.001 ***)"
       },
       "XGBoost vs Random Forest": {
         "dm_statistic": -6.2942,
         "mdm_statistic": -6.2929,
-        "p_value_two_tailed": 3.117558905467687e-10,
-        "p_value_one_tailed": 1.5587794527338436e-10,
+        "p_value_two_tailed": 3.1175589054677555e-10,
+        "p_value_one_tailed": 1.5587794527338777e-10,
         "h0_rejected": true,
         "stars": "***",
         "loss_differential_mean": -0.413245,
         "hac_std_error": 0.065655,
-        "conclusion": "XGBoost has significantly better forecast accuracy (MDM=-6.293, p=3.118e-10 ***)"
+        "conclusion": "XGBoost has significantly better forecast accuracy (MDM=-6.293, p<0.001 ***)"
       },
       "XGBoost vs LSTM": {
         "dm_statistic": -11.0723,
         "mdm_statistic": -11.0701,
-        "p_value_two_tailed": 1.766719859409191e-28,
-        "p_value_one_tailed": 8.833599297045955e-29,
+        "p_value_two_tailed": 1.7667198594093177e-28,
+        "p_value_one_tailed": 8.833599297046589e-29,
         "h0_rejected": true,
         "stars": "***",
         "loss_differential_mean": -2.83786,
         "hac_std_error": 0.256303,
-        "conclusion": "XGBoost has significantly better forecast accuracy (MDM=-11.070, p=1.767e-28 ***)"
+        "conclusion": "XGBoost has significantly better forecast accuracy (MDM=-11.070, p<0.001 ***)"
       },
       "Random Forest vs LSTM": {
         "dm_statistic": -9.0895,
         "mdm_statistic": -9.0877,
-        "p_value_two_tailed": 1.014952380938463e-19,
-        "p_value_one_tailed": 5.074761904692315e-20,
+        "p_value_two_tailed": 1.0149523809384702e-19,
+        "p_value_one_tailed": 5.074761904692351e-20,
         "h0_rejected": true,
         "stars": "***",
         "loss_differential_mean": -2.424615,
         "hac_std_error": 0.266748,
-        "conclusion": "Random Forest has significantly better forecast accuracy (MDM=-9.088, p=1.015e-19 ***)"
+        "conclusion": "Random Forest has significantly better forecast accuracy (MDM=-9.088, p<0.001 ***)"
       }
     }
   }
