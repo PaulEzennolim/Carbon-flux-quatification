@@ -1,0 +1,11 @@
+site,model,failure_threshold_rmse,n_failure_sequences,pct_of_total,mean_failure_rmse,max_failure_rmse,failure_mean_vpd_norm,normal_mean_vpd_norm,vpd_mannwhitney_p,ta_mannwhitney_p,dominant_season,night_failure_pct,day_failure_pct
+UK-AMo,TEMPO Fine-Tuned,4.5546,453,5.0,5.6965,7.9502,-0.4827,-0.4858,0.1302,0.0,Summer,40.0,60.0
+UK-AMo,TEMPO Zero-Shot,6.1987,453,5.0,6.9867,9.3511,-0.4774,-0.4861,0.0,0.0,Summer,40.2,59.8
+UK-AMo,XGBoost,4.6236,453,5.0,5.2194,6.4566,-0.4832,-0.4858,0.0049,0.0,Summer,35.1,64.9
+UK-AMo,Random Forest,4.0028,453,5.0,5.1847,7.1783,-0.4834,-0.4858,0.0234,0.0,Summer,36.0,64.0
+UK-AMo,LSTM,5.4174,453,5.0,6.3245,9.2882,-0.4749,-0.4862,0.0,0.0,Summer,36.2,63.8
+SE-Htm,TEMPO Fine-Tuned,5.9016,251,5.01,6.4037,7.7519,-0.4545,-0.4756,0.0,0.0,Summer,33.1,66.9
+SE-Htm,TEMPO Zero-Shot,5.6369,251,5.01,6.1521,8.052,-0.4677,-0.4749,0.0,0.0,Summer,36.3,63.7
+SE-Htm,XGBoost,8.4433,251,5.01,8.7781,9.4967,-0.4649,-0.475,0.0001,0.0,Summer,41.8,58.2
+SE-Htm,Random Forest,8.539,251,5.01,8.9219,10.4085,-0.4752,-0.4745,0.2292,0.0,Summer,47.0,53.0
+SE-Htm,LSTM,9.6253,251,5.01,10.8489,12.4152,-0.4513,-0.4758,0.0,0.0,Summer,35.9,64.1

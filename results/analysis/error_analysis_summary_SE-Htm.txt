@@ -1,0 +1,128 @@
+========================================================================
+COMPREHENSIVE ERROR ANALYSIS — SE-Htm (Forest)
+========================================================================
+
+Site          : SE-Htm
+Ecosystem     : Temperate forest
+N sequences   : 5,007 (lookback=336h, horizon=96h)
+Models        : TEMPO Fine-Tuned, TEMPO Zero-Shot, XGBoost, Random Forest, LSTM
+
+────────────────────────────────────────────────────────────────────────
+OVERALL METRICS (Sequence-level RMSE)
+────────────────────────────────────────────────────────────────────────
+  TEMPO Fine-Tuned        mean RMSE=3.4328  median RMSE=3.3855  mean bias=+0.3541
+  TEMPO Zero-Shot         mean RMSE=3.2716  median RMSE=3.2523  mean bias=+0.1182
+  XGBoost                 mean RMSE=5.7156  median RMSE=6.4933  mean bias=+1.4646
+  Random Forest           mean RMSE=5.7268  median RMSE=6.5222  mean bias=+1.3274
+  LSTM                    mean RMSE=5.8656  median RMSE=6.3943  mean bias=+1.3859
+
+────────────────────────────────────────────────────────────────────────
+TEMPORAL ERROR PATTERNS
+────────────────────────────────────────────────────────────────────────
+
+  TEMPO Fine-Tuned:
+    Nighttime RMSE: 3.3956 | Daytime RMSE: 3.4594 | Δ: +0.0638
+    Worst season: Summer (RMSE=5.0475) | Best: Winter (RMSE=1.2680)
+    Kruskal-Wallis test: H=3655.54, p=0.000e+00 ***
+
+  TEMPO Zero-Shot:
+    Nighttime RMSE: 3.2632 | Daytime RMSE: 3.2776 | Δ: +0.0144
+    Worst season: Summer (RMSE=4.8389) | Best: Winter (RMSE=1.2440)
+    Kruskal-Wallis test: H=3653.86, p=0.000e+00 ***
+
+  XGBoost:
+    Nighttime RMSE: 5.7237 | Daytime RMSE: 5.7099 | Δ: -0.0138
+    Worst season: Summer (RMSE=7.8029) | Best: Winter (RMSE=2.0044)
+    Kruskal-Wallis test: H=3762.30, p=0.000e+00 ***
+
+  Random Forest:
+    Nighttime RMSE: 5.7413 | Daytime RMSE: 5.7165 | Δ: -0.0248
+    Worst season: Summer (RMSE=7.7623) | Best: Winter (RMSE=1.8965)
+    Kruskal-Wallis test: H=3539.99, p=0.000e+00 ***
+
+  LSTM:
+    Nighttime RMSE: 5.8442 | Daytime RMSE: 5.8809 | Δ: +0.0367
+    Worst season: Summer (RMSE=7.8134) | Best: Winter (RMSE=1.9941)
+    Kruskal-Wallis test: H=2975.34, p=0.000e+00 ***
+
+────────────────────────────────────────────────────────────────────────
+SPEARMAN CORRELATIONS (error ~ environment)
+────────────────────────────────────────────────────────────────────────
+
+  TEMPO Fine-Tuned:
+    VPD_F (norm)      : ρ=+0.4526, p=1.758e-251 ***
+    TA_F  (norm)      : ρ=+0.8188, p=0.000e+00 ***
+    SW_IN_F(norm)     : ρ=+0.3322, p=4.210e-129 ***
+
+  TEMPO Zero-Shot:
+    VPD_F (norm)      : ρ=+0.4481, p=6.941e-246 ***
+    TA_F  (norm)      : ρ=+0.8154, p=0.000e+00 ***
+    SW_IN_F(norm)     : ρ=+0.3180, p=7.746e-118 ***
+
+  XGBoost:
+    VPD_F (norm)      : ρ=+0.4344, p=1.488e-229 ***
+    TA_F  (norm)      : ρ=+0.7682, p=0.000e+00 ***
+    SW_IN_F(norm)     : ρ=+0.3102, p=6.326e-112 ***
+
+  Random Forest:
+    VPD_F (norm)      : ρ=+0.4223, p=9.320e-216 ***
+    TA_F  (norm)      : ρ=+0.7557, p=0.000e+00 ***
+    SW_IN_F(norm)     : ρ=+0.3041, p=1.825e-107 ***
+
+  LSTM:
+    VPD_F (norm)      : ρ=+0.4833, p=1.821e-291 ***
+    TA_F  (norm)      : ρ=+0.7184, p=0.000e+00 ***
+    SW_IN_F(norm)     : ρ=+0.3227, p=1.616e-121 ***
+
+────────────────────────────────────────────────────────────────────────
+FAILURE CASE ANALYSIS (Worst 5% of sequences)
+────────────────────────────────────────────────────────────────────────
+
+  TEMPO Fine-Tuned:
+    Failure threshold (95th pct RMSE): 5.9016
+    N failure sequences  : 251 (5.0%)
+    Mean failure RMSE    : 6.4037
+    Max failure RMSE     : 7.7519
+    Dominant season      : Summer
+    Night failures       : 33.1%  Day failures: 66.9%
+    VPD at failure (norm): -0.4545 vs -0.4756 (normal) [MWU p=0.0000 ***]
+
+  TEMPO Zero-Shot:
+    Failure threshold (95th pct RMSE): 5.6369
+    N failure sequences  : 251 (5.0%)
+    Mean failure RMSE    : 6.1521
+    Max failure RMSE     : 8.0520
+    Dominant season      : Summer
+    Night failures       : 36.3%  Day failures: 63.7%
+    VPD at failure (norm): -0.4677 vs -0.4749 (normal) [MWU p=0.0000 ***]
+
+  XGBoost:
+    Failure threshold (95th pct RMSE): 8.4433
+    N failure sequences  : 251 (5.0%)
+    Mean failure RMSE    : 8.7781
+    Max failure RMSE     : 9.4967
+    Dominant season      : Summer
+    Night failures       : 41.8%  Day failures: 58.2%
+    VPD at failure (norm): -0.4649 vs -0.4750 (normal) [MWU p=0.0001 ***]
+
+  Random Forest:
+    Failure threshold (95th pct RMSE): 8.5390
+    N failure sequences  : 251 (5.0%)
+    Mean failure RMSE    : 8.9219
+    Max failure RMSE     : 10.4085
+    Dominant season      : Summer
+    Night failures       : 47.0%  Day failures: 53.0%
+    VPD at failure (norm): -0.4752 vs -0.4745 (normal) [MWU p=0.2292 ns]
+
+  LSTM:
+    Failure threshold (95th pct RMSE): 9.6253
+    N failure sequences  : 251 (5.0%)
+    Mean failure RMSE    : 10.8489
+    Max failure RMSE     : 12.4152
+    Dominant season      : Summer
+    Night failures       : 35.9%  Day failures: 64.1%
+    VPD at failure (norm): -0.4513 vs -0.4758 (normal) [MWU p=0.0000 ***]
+
+========================================================================
+End of Error Analysis
+========================================================================
