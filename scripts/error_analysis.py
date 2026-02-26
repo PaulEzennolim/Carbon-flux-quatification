@@ -165,6 +165,13 @@ def significance_label(p: float) -> str:
     return "ns"
 
 
+def format_p_value_for_csv(p: float, threshold: float = 0.001) -> str:
+    """Format p-value for CSV output: show '< 0.001' for very small values."""
+    if p < threshold:
+        return "< 0.001"
+    return str(round(p, 4))
+
+
 def _savefig(fig: plt.Figure, path: Path) -> None:
     """Save figure as PNG and PDF."""
     fig.savefig(path, bbox_inches="tight")
@@ -976,9 +983,10 @@ def generate_text_summary(site: str, data: dict, failure_df: pd.DataFrame) -> No
         groups = [errors[seasons == s] for s in season_order if (seasons == s).sum() > 1]
         if len(groups) >= 2:
             h_stat, p_kw = kruskal(*groups)
+            p_kw_str = "<0.001" if p_kw < 0.001 else f"={p_kw:.3e}"
             lines.append(
                 f"    Kruskal-Wallis test: H={h_stat:.2f}, "
-                f"p={p_kw:.3e} {significance_label(p_kw)}"
+                f"p{p_kw_str} {significance_label(p_kw)}"
             )
     lines.append("")
 
@@ -995,9 +1003,10 @@ def generate_text_summary(site: str, data: dict, failure_df: pd.DataFrame) -> No
             valid = ~np.isnan(env_vals)
             if valid.sum() > 10:
                 rho, p = spearmanr(env_vals[valid], errors[valid])
+                p_str = "<0.001" if p < 0.001 else f"={p:.3e}"
                 lines.append(
                     f"    {env_name:<18}: ρ={rho:+.4f}, "
-                    f"p={p:.3e} {significance_label(p)}"
+                    f"p{p_str} {significance_label(p)}"
                 )
     lines.append("")
 
@@ -1005,6 +1014,8 @@ def generate_text_summary(site: str, data: dict, failure_df: pd.DataFrame) -> No
     lines += ["─" * 72, "FAILURE CASE ANALYSIS (Worst 5% of sequences)", "─" * 72]
     site_failures = failure_df[failure_df['site'] == site]
     for _, row in site_failures.iterrows():
+        p_vpd = row['vpd_mannwhitney_p']
+        p_vpd_str = "<0.001" if p_vpd < 0.001 else f"={p_vpd:.4f}"
         lines += [
             f"\n  {row['model']}:",
             f"    Failure threshold (95th pct RMSE): {row['failure_threshold_rmse']:.4f}",
@@ -1017,8 +1028,7 @@ def generate_text_summary(site: str, data: dict, failure_df: pd.DataFrame) -> No
             f"Day failures: {row['day_failure_pct']:.1f}%",
             f"    VPD at failure (norm): {row['failure_mean_vpd_norm']:.4f} vs "
             f"{row['normal_mean_vpd_norm']:.4f} (normal) "
-            f"[MWU p={row['vpd_mannwhitney_p']:.4f} "
-            f"{significance_label(row['vpd_mannwhitney_p'])}]",
+            f"[MWU p{p_vpd_str} {significance_label(p_vpd)}]",
         ]
 
     lines += ["", "=" * 72, "End of Error Analysis", "=" * 72]
@@ -1085,7 +1095,10 @@ def main():
     if all_failure_dfs:
         combined_fail = pd.concat(all_failure_dfs, ignore_index=True)
         csv_path = OUT_DIR / "failure_cases.csv"
-        combined_fail.to_csv(csv_path, index=False)
+        csv_out = combined_fail.copy()
+        csv_out['vpd_mannwhitney_p'] = csv_out['vpd_mannwhitney_p'].apply(format_p_value_for_csv)
+        csv_out['ta_mannwhitney_p'] = csv_out['ta_mannwhitney_p'].apply(format_p_value_for_csv)
+        csv_out.to_csv(csv_path, index=False)
         print(f"\n  Saved: {csv_path.relative_to(ROOT)}")
 
         # Pretty-print failure summary
