@@ -48,6 +48,8 @@ class LSTMForecaster(nn.Module):
         predictions = self.fc(lstm_out[:, -1, :])
         return predictions
 
+# Alias for scripts that import LSTMBaseline
+LSTMBaseline = LSTMForecaster
 
 def train_lstm(model, X_train, y_train, epochs=20, batch_size=64, lr=1e-3):
     device = torch.device('mps' if torch.backends.mps.is_available() else 'cpu')

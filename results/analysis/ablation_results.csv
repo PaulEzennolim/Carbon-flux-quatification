@@ -1,0 +1,115 @@
+site,model,feature,feature_group,delta_rmse,rank
+UK-AMo,Random Forest,SW_IN_F,Meteorological,0.283221,17
+UK-AMo,Random Forest,LW_IN_F,Meteorological,0.068485,15
+UK-AMo,Random Forest,VPD_F,Meteorological,0.004573,9
+UK-AMo,Random Forest,TA_F,Meteorological,0.059787,14
+UK-AMo,Random Forest,PA_F,Meteorological,-0.002128,5
+UK-AMo,Random Forest,P_F,Meteorological,-4.7e-05,7
+UK-AMo,Random Forest,WS_F,Meteorological,0.049023,13
+UK-AMo,Random Forest,G_F_MDS,Energy Fluxes,-0.035988,2
+UK-AMo,Random Forest,LE_F_MDS,Energy Fluxes,0.390699,18
+UK-AMo,Random Forest,H_F_MDS,Energy Fluxes,0.021038,10
+UK-AMo,Random Forest,MODIS_band_1,Remote Sensing,0.046751,12
+UK-AMo,Random Forest,MODIS_band_2,Remote Sensing,0.137429,16
+UK-AMo,Random Forest,MODIS_band_3,Remote Sensing,-0.012919,3
+UK-AMo,Random Forest,MODIS_band_4,Remote Sensing,0.026288,11
+UK-AMo,Random Forest,MODIS_band_5,Remote Sensing,0.000178,8
+UK-AMo,Random Forest,MODIS_band_6,Remote Sensing,-0.011959,4
+UK-AMo,Random Forest,MODIS_band_7,Remote Sensing,-0.052627,1
+UK-AMo,Random Forest,DOY,Temporal,-0.000391,6
+UK-AMo,Random Forest,TOD,Temporal,0.521216,19
+SE-Htm,Random Forest,SW_IN_F,Meteorological,0.082023,15
+SE-Htm,Random Forest,LW_IN_F,Meteorological,0.016348,13
+SE-Htm,Random Forest,VPD_F,Meteorological,-0.002576,10
+SE-Htm,Random Forest,TA_F,Meteorological,0.043284,14
+SE-Htm,Random Forest,PA_F,Meteorological,-0.090952,2
+SE-Htm,Random Forest,P_F,Meteorological,-6.3e-05,11
+SE-Htm,Random Forest,WS_F,Meteorological,0.100656,16
+SE-Htm,Random Forest,G_F_MDS,Energy Fluxes,-0.037877,4
+SE-Htm,Random Forest,LE_F_MDS,Energy Fluxes,1.216322,19
+SE-Htm,Random Forest,H_F_MDS,Energy Fluxes,0.010305,12
+SE-Htm,Random Forest,MODIS_band_1,Remote Sensing,0.185673,17
+SE-Htm,Random Forest,MODIS_band_2,Remote Sensing,-0.088548,3
+SE-Htm,Random Forest,MODIS_band_3,Remote Sensing,-0.01958,7
+SE-Htm,Random Forest,MODIS_band_4,Remote Sensing,-0.70993,1
+SE-Htm,Random Forest,MODIS_band_5,Remote Sensing,-0.022854,5
+SE-Htm,Random Forest,MODIS_band_6,Remote Sensing,-0.007922,9
+SE-Htm,Random Forest,MODIS_band_7,Remote Sensing,-0.020436,6
+SE-Htm,Random Forest,DOY,Temporal,-0.019032,8
+SE-Htm,Random Forest,TOD,Temporal,0.631365,18
+UK-AMo,XGBoost,SW_IN_F,Meteorological,0.347778,19
+UK-AMo,XGBoost,LW_IN_F,Meteorological,0.07538,15
+UK-AMo,XGBoost,VPD_F,Meteorological,-0.025565,3
+UK-AMo,XGBoost,TA_F,Meteorological,0.087128,16
+UK-AMo,XGBoost,PA_F,Meteorological,-0.020127,4
+UK-AMo,XGBoost,P_F,Meteorological,-0.000309,7
+UK-AMo,XGBoost,WS_F,Meteorological,0.049204,12
+UK-AMo,XGBoost,G_F_MDS,Energy Fluxes,-0.015956,5
+UK-AMo,XGBoost,LE_F_MDS,Energy Fluxes,0.297407,18
+UK-AMo,XGBoost,H_F_MDS,Energy Fluxes,0.019311,9
+UK-AMo,XGBoost,MODIS_band_1,Remote Sensing,0.062189,13
+UK-AMo,XGBoost,MODIS_band_2,Remote Sensing,0.031152,10
+UK-AMo,XGBoost,MODIS_band_3,Remote Sensing,0.071781,14
+UK-AMo,XGBoost,MODIS_band_4,Remote Sensing,0.043066,11
+UK-AMo,XGBoost,MODIS_band_5,Remote Sensing,0.001469,8
+UK-AMo,XGBoost,MODIS_band_6,Remote Sensing,-0.055433,2
+UK-AMo,XGBoost,MODIS_band_7,Remote Sensing,-0.071039,1
+UK-AMo,XGBoost,DOY,Temporal,-0.004307,6
+UK-AMo,XGBoost,TOD,Temporal,0.099522,17
+SE-Htm,XGBoost,SW_IN_F,Meteorological,0.202204,18
+SE-Htm,XGBoost,LW_IN_F,Meteorological,0.051015,11
+SE-Htm,XGBoost,VPD_F,Meteorological,-0.030712,7
+SE-Htm,XGBoost,TA_F,Meteorological,0.132204,15
+SE-Htm,XGBoost,PA_F,Meteorological,-0.210897,1
+SE-Htm,XGBoost,P_F,Meteorological,-0.00065,10
+SE-Htm,XGBoost,WS_F,Meteorological,0.099904,13
+SE-Htm,XGBoost,G_F_MDS,Energy Fluxes,-0.038238,5
+SE-Htm,XGBoost,LE_F_MDS,Energy Fluxes,0.49584,19
+SE-Htm,XGBoost,H_F_MDS,Energy Fluxes,0.077043,12
+SE-Htm,XGBoost,MODIS_band_1,Remote Sensing,0.187079,17
+SE-Htm,XGBoost,MODIS_band_2,Remote Sensing,-0.058415,3
+SE-Htm,XGBoost,MODIS_band_3,Remote Sensing,0.102666,14
+SE-Htm,XGBoost,MODIS_band_4,Remote Sensing,-0.15064,2
+SE-Htm,XGBoost,MODIS_band_5,Remote Sensing,-0.014323,9
+SE-Htm,XGBoost,MODIS_band_6,Remote Sensing,-0.041237,4
+SE-Htm,XGBoost,MODIS_band_7,Remote Sensing,-0.034864,6
+SE-Htm,XGBoost,DOY,Temporal,-0.028526,8
+SE-Htm,XGBoost,TOD,Temporal,0.152812,16
+UK-AMo,LSTM,SW_IN_F,Meteorological,-0.061868,2
+UK-AMo,LSTM,LW_IN_F,Meteorological,-0.061033,3
+UK-AMo,LSTM,VPD_F,Meteorological,0.00232,8
+UK-AMo,LSTM,TA_F,Meteorological,-0.023139,7
+UK-AMo,LSTM,PA_F,Meteorological,0.06665,12
+UK-AMo,LSTM,P_F,Meteorological,0.158341,16
+UK-AMo,LSTM,WS_F,Meteorological,0.406013,17
+UK-AMo,LSTM,G_F_MDS,Energy Fluxes,0.061509,10
+UK-AMo,LSTM,LE_F_MDS,Energy Fluxes,-0.037652,4
+UK-AMo,LSTM,H_F_MDS,Energy Fluxes,0.11137,14
+UK-AMo,LSTM,MODIS_band_1,Remote Sensing,-0.026733,6
+UK-AMo,LSTM,MODIS_band_2,Remote Sensing,0.100912,13
+UK-AMo,LSTM,MODIS_band_3,Remote Sensing,-0.031533,5
+UK-AMo,LSTM,MODIS_band_4,Remote Sensing,0.017225,9
+UK-AMo,LSTM,MODIS_band_5,Remote Sensing,0.065239,11
+UK-AMo,LSTM,MODIS_band_6,Remote Sensing,0.148798,15
+UK-AMo,LSTM,MODIS_band_7,Remote Sensing,-0.085677,1
+UK-AMo,LSTM,DOY,Temporal,0.714942,18
+UK-AMo,LSTM,TOD,Temporal,1.236187,19
+SE-Htm,LSTM,SW_IN_F,Meteorological,-0.120701,8
+SE-Htm,LSTM,LW_IN_F,Meteorological,-0.0011,9
+SE-Htm,LSTM,VPD_F,Meteorological,0.016469,11
+SE-Htm,LSTM,TA_F,Meteorological,-0.168357,6
+SE-Htm,LSTM,PA_F,Meteorological,-0.259331,3
+SE-Htm,LSTM,P_F,Meteorological,-0.15078,7
+SE-Htm,LSTM,WS_F,Meteorological,0.145976,13
+SE-Htm,LSTM,G_F_MDS,Energy Fluxes,-0.171481,5
+SE-Htm,LSTM,LE_F_MDS,Energy Fluxes,0.300742,17
+SE-Htm,LSTM,H_F_MDS,Energy Fluxes,-0.5488,2
+SE-Htm,LSTM,MODIS_band_1,Remote Sensing,0.271556,16
+SE-Htm,LSTM,MODIS_band_2,Remote Sensing,-0.664771,1
+SE-Htm,LSTM,MODIS_band_3,Remote Sensing,0.196634,15
+SE-Htm,LSTM,MODIS_band_4,Remote Sensing,0.168443,14
+SE-Htm,LSTM,MODIS_band_5,Remote Sensing,-0.217851,4
+SE-Htm,LSTM,MODIS_band_6,Remote Sensing,0.030097,12
+SE-Htm,LSTM,MODIS_band_7,Remote Sensing,0.310573,18
+SE-Htm,LSTM,DOY,Temporal,0.015818,10
+SE-Htm,LSTM,TOD,Temporal,1.563967,19

@@ -1,0 +1,226 @@
+========================================================================
+FEATURE IMPORTANCE ANALYSIS — CARBON FLUX MODELS
+========================================================================
+Features        : 19  (SW_IN_F, LW_IN_F, VPD_F, TA_F, PA_F, ...)
+Lookback window : 336 hours  (14 days)
+Forecast horizon: 96 hours
+
+Note: MDI importance is computed during model training and reflects the
+training data distribution (not test-site-specific). Permutation
+importance and occlusion ablation are site-specific.
+
+────────────────────────────────────────────────────────────────────────
+UK-AMo (Wetland)
+────────────────────────────────────────────────────────────────────────
+
+  XGBoost
+  ────────────────────────────────────────
+  Top 5 features (MDI - global from training data):
+    1. LE_F_MDS              Energy Fluxes     0.1115
+    2. MODIS_band_2          Remote Sensing    0.0888
+    3. MODIS_band_4          Remote Sensing    0.0857
+    4. MODIS_band_6          Remote Sensing    0.0850
+    5. MODIS_band_7          Remote Sensing    0.0651
+  Top 5 features (Grouped Permutation):
+    1. LE_F_MDS              ΔRMSE=+0.4593 ± 0.0022
+    2. SW_IN_F               ΔRMSE=+0.2727 ± 0.0015
+    3. TOD                   ΔRMSE=+0.1063 ± 0.0006
+    4. TA_F                  ΔRMSE=+0.0643 ± 0.0010
+    5. LW_IN_F               ΔRMSE=+0.0440 ± 0.0007
+  Top 5 features (Occlusion Ablation):
+    1. SW_IN_F               ΔRMSE=+0.3478
+    2. LE_F_MDS              ΔRMSE=+0.2974
+    3. TOD                   ΔRMSE=+0.0995
+    4. TA_F                  ΔRMSE=+0.0871
+    5. LW_IN_F               ΔRMSE=+0.0754
+
+  Random Forest
+  ────────────────────────────────────────
+  Top 5 features (MDI - global from training data):
+    1. LE_F_MDS              Energy Fluxes     0.2356
+    2. TOD                   Temporal          0.1906
+    3. SW_IN_F               Meteorological    0.0803
+    4. MODIS_band_1          Remote Sensing    0.0607
+    5. MODIS_band_2          Remote Sensing    0.0599
+  Top 5 features (Grouped Permutation):
+    1. TOD                   ΔRMSE=+0.6698 ± 0.0114
+    2. LE_F_MDS              ΔRMSE=+0.4100 ± 0.0017
+    3. SW_IN_F               ΔRMSE=+0.1468 ± 0.0016
+    4. MODIS_band_2          ΔRMSE=+0.1456 ± 0.0012
+    5. TA_F                  ΔRMSE=+0.0487 ± 0.0005
+  Top 5 features (Occlusion Ablation):
+    1. TOD                   ΔRMSE=+0.5212
+    2. LE_F_MDS              ΔRMSE=+0.3907
+    3. SW_IN_F               ΔRMSE=+0.2832
+    4. MODIS_band_2          ΔRMSE=+0.1374
+    5. LW_IN_F               ΔRMSE=+0.0685
+
+  LSTM
+  ────────────────────────────────────────
+  Top 5 features (Occlusion Ablation):
+    1. TOD                   ΔRMSE=+1.2362
+    2. DOY                   ΔRMSE=+0.7149
+    3. WS_F                  ΔRMSE=+0.4060
+    4. P_F                   ΔRMSE=+0.1583
+    5. MODIS_band_6          ΔRMSE=+0.1488
+
+  High Spearman correlations (|ρ| > 0.7):
+    SW_IN_F            ↔  VPD_F               ρ=+0.835
+    SW_IN_F            ↔  TA_F                ρ=+0.817
+    SW_IN_F            ↔  G_F_MDS             ρ=+0.790
+    SW_IN_F            ↔  LE_F_MDS            ρ=+0.944
+    SW_IN_F            ↔  H_F_MDS             ρ=+0.894
+    SW_IN_F            ↔  MODIS_band_2        ρ=+0.946
+    SW_IN_F            ↔  MODIS_band_5        ρ=+0.946
+    SW_IN_F            ↔  MODIS_band_6        ρ=+0.771
+    SW_IN_F            ↔  MODIS_band_7        ρ=+0.746
+    LW_IN_F            ↔  TA_F                ρ=+0.917
+    LW_IN_F            ↔  G_F_MDS             ρ=+0.722
+    VPD_F              ↔  LE_F_MDS            ρ=+0.755
+    VPD_F              ↔  H_F_MDS             ρ=+0.758
+    VPD_F              ↔  MODIS_band_2        ρ=+0.767
+    VPD_F              ↔  MODIS_band_5        ρ=+0.788
+    VPD_F              ↔  MODIS_band_6        ρ=+0.785
+    VPD_F              ↔  MODIS_band_7        ρ=+0.798
+    TA_F               ↔  G_F_MDS             ρ=+0.790
+    TA_F               ↔  LE_F_MDS            ρ=+0.871
+    TA_F               ↔  H_F_MDS             ρ=+0.753
+    TA_F               ↔  MODIS_band_2        ρ=+0.829
+    TA_F               ↔  MODIS_band_5        ρ=+0.754
+    G_F_MDS            ↔  LE_F_MDS            ρ=+0.740
+    G_F_MDS            ↔  MODIS_band_2        ρ=+0.741
+    G_F_MDS            ↔  MODIS_band_5        ρ=+0.717
+    LE_F_MDS           ↔  H_F_MDS             ρ=+0.883
+    LE_F_MDS           ↔  MODIS_band_2        ρ=+0.962
+    LE_F_MDS           ↔  MODIS_band_5        ρ=+0.920
+    H_F_MDS            ↔  MODIS_band_2        ρ=+0.911
+    H_F_MDS            ↔  MODIS_band_5        ρ=+0.918
+    H_F_MDS            ↔  MODIS_band_6        ρ=+0.759
+    H_F_MDS            ↔  MODIS_band_7        ρ=+0.726
+    MODIS_band_1       ↔  MODIS_band_3        ρ=+0.869
+    MODIS_band_1       ↔  MODIS_band_4        ρ=+0.753
+    MODIS_band_2       ↔  MODIS_band_5        ρ=+0.974
+    MODIS_band_2       ↔  MODIS_band_6        ρ=+0.762
+    MODIS_band_2       ↔  MODIS_band_7        ρ=+0.731
+    MODIS_band_3       ↔  MODIS_band_4        ρ=+0.858
+    MODIS_band_5       ↔  MODIS_band_6        ρ=+0.854
+    MODIS_band_5       ↔  MODIS_band_7        ρ=+0.826
+    MODIS_band_6       ↔  MODIS_band_7        ρ=+0.953
+
+────────────────────────────────────────────────────────────────────────
+SE-Htm (Forest)
+────────────────────────────────────────────────────────────────────────
+
+  XGBoost
+  ────────────────────────────────────────
+  Top 5 features (MDI - global from training data):
+    1. LE_F_MDS              Energy Fluxes     0.1115
+    2. MODIS_band_2          Remote Sensing    0.0888
+    3. MODIS_band_4          Remote Sensing    0.0857
+    4. MODIS_band_6          Remote Sensing    0.0850
+    5. MODIS_band_7          Remote Sensing    0.0651
+  Top 5 features (Grouped Permutation):
+    1. LE_F_MDS              ΔRMSE=+0.5068 ± 0.0064
+    2. SW_IN_F               ΔRMSE=+0.3041 ± 0.0019
+    3. TOD                   ΔRMSE=+0.1401 ± 0.0020
+    4. TA_F                  ΔRMSE=+0.1022 ± 0.0011
+    5. MODIS_band_6          ΔRMSE=+0.0751 ± 0.0016
+  Top 5 features (Occlusion Ablation):
+    1. LE_F_MDS              ΔRMSE=+0.4958
+    2. SW_IN_F               ΔRMSE=+0.2022
+    3. MODIS_band_1          ΔRMSE=+0.1871
+    4. TOD                   ΔRMSE=+0.1528
+    5. TA_F                  ΔRMSE=+0.1322
+
+  Random Forest
+  ────────────────────────────────────────
+  Top 5 features (MDI - global from training data):
+    1. LE_F_MDS              Energy Fluxes     0.2356
+    2. TOD                   Temporal          0.1906
+    3. SW_IN_F               Meteorological    0.0803
+    4. MODIS_band_1          Remote Sensing    0.0607
+    5. MODIS_band_2          Remote Sensing    0.0599
+  Top 5 features (Grouped Permutation):
+    1. TOD                   ΔRMSE=+0.6715 ± 0.0073
+    2. LE_F_MDS              ΔRMSE=+0.6636 ± 0.0057
+    3. SW_IN_F               ΔRMSE=+0.0867 ± 0.0014
+    4. MODIS_band_1          ΔRMSE=+0.0571 ± 0.0049
+    5. WS_F                  ΔRMSE=+0.0282 ± 0.0008
+  Top 5 features (Occlusion Ablation):
+    1. LE_F_MDS              ΔRMSE=+1.2163
+    2. TOD                   ΔRMSE=+0.6314
+    3. MODIS_band_1          ΔRMSE=+0.1857
+    4. WS_F                  ΔRMSE=+0.1007
+    5. SW_IN_F               ΔRMSE=+0.0820
+
+  LSTM
+  ────────────────────────────────────────
+  Top 5 features (Occlusion Ablation):
+    1. TOD                   ΔRMSE=+1.5640
+    2. MODIS_band_7          ΔRMSE=+0.3106
+    3. LE_F_MDS              ΔRMSE=+0.3007
+    4. MODIS_band_1          ΔRMSE=+0.2716
+    5. MODIS_band_3          ΔRMSE=+0.1966
+
+  High Spearman correlations (|ρ| > 0.7):
+    SW_IN_F            ↔  VPD_F               ρ=+0.974
+    SW_IN_F            ↔  TA_F                ρ=+0.875
+    SW_IN_F            ↔  G_F_MDS             ρ=+0.881
+    SW_IN_F            ↔  LE_F_MDS            ρ=+0.963
+    SW_IN_F            ↔  H_F_MDS             ρ=+0.964
+    SW_IN_F            ↔  MODIS_band_1        ρ=-0.773
+    SW_IN_F            ↔  MODIS_band_3        ρ=-0.733
+    SW_IN_F            ↔  MODIS_band_5        ρ=+0.856
+    SW_IN_F            ↔  MODIS_band_6        ρ=+0.804
+    SW_IN_F            ↔  DOY                 ρ=+0.839
+    LW_IN_F            ↔  TA_F                ρ=+0.884
+    LW_IN_F            ↔  G_F_MDS             ρ=+0.873
+    LW_IN_F            ↔  LE_F_MDS            ρ=+0.721
+    LW_IN_F            ↔  MODIS_band_1        ρ=-0.840
+    LW_IN_F            ↔  MODIS_band_2        ρ=+0.717
+    LW_IN_F            ↔  MODIS_band_5        ρ=+0.819
+    LW_IN_F            ↔  DOY                 ρ=+0.845
+    VPD_F              ↔  TA_F                ρ=+0.891
+    VPD_F              ↔  G_F_MDS             ρ=+0.896
+    VPD_F              ↔  LE_F_MDS            ρ=+0.970
+    VPD_F              ↔  H_F_MDS             ρ=+0.928
+    VPD_F              ↔  MODIS_band_1        ρ=-0.728
+    VPD_F              ↔  MODIS_band_3        ρ=-0.704
+    VPD_F              ↔  MODIS_band_5        ρ=+0.852
+    VPD_F              ↔  MODIS_band_6        ρ=+0.792
+    VPD_F              ↔  DOY                 ρ=+0.807
+    TA_F               ↔  G_F_MDS             ρ=+0.976
+    TA_F               ↔  LE_F_MDS            ρ=+0.922
+    TA_F               ↔  H_F_MDS             ρ=+0.789
+    TA_F               ↔  MODIS_band_1        ρ=-0.859
+    TA_F               ↔  MODIS_band_3        ρ=-0.750
+    TA_F               ↔  MODIS_band_5        ρ=+0.926
+    TA_F               ↔  DOY                 ρ=+0.940
+    G_F_MDS            ↔  LE_F_MDS            ρ=+0.905
+    G_F_MDS            ↔  H_F_MDS             ρ=+0.810
+    G_F_MDS            ↔  MODIS_band_1        ρ=-0.865
+    G_F_MDS            ↔  MODIS_band_3        ρ=-0.790
+    G_F_MDS            ↔  MODIS_band_5        ρ=+0.913
+    G_F_MDS            ↔  DOY                 ρ=+0.897
+    LE_F_MDS           ↔  H_F_MDS             ρ=+0.894
+    LE_F_MDS           ↔  MODIS_band_1        ρ=-0.768
+    LE_F_MDS           ↔  MODIS_band_5        ρ=+0.842
+    LE_F_MDS           ↔  MODIS_band_6        ρ=+0.721
+    LE_F_MDS           ↔  DOY                 ρ=+0.877
+    H_F_MDS            ↔  MODIS_band_1        ρ=-0.750
+    H_F_MDS            ↔  MODIS_band_3        ρ=-0.748
+    H_F_MDS            ↔  MODIS_band_5        ρ=+0.828
+    H_F_MDS            ↔  MODIS_band_6        ρ=+0.808
+    H_F_MDS            ↔  DOY                 ρ=+0.766
+    MODIS_band_1       ↔  MODIS_band_3        ρ=+0.891
+    MODIS_band_1       ↔  MODIS_band_5        ρ=-0.862
+    MODIS_band_1       ↔  DOY                 ρ=-0.903
+    MODIS_band_2       ↔  MODIS_band_5        ρ=+0.736
+    MODIS_band_3       ↔  MODIS_band_5        ρ=-0.792
+    MODIS_band_3       ↔  DOY                 ρ=-0.729
+    MODIS_band_5       ↔  DOY                 ρ=+0.903
+    MODIS_band_6       ↔  MODIS_band_7        ρ=+0.788
+
+========================================================================
+End of Feature Importance Analysis
+========================================================================
