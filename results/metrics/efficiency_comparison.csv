@@ -1,0 +1,4 @@
+Model,RMSE_avg,R2_avg,ColdStart_s,ColdStart_std_s,InferSingle_ms,InferSingle_std_ms,InferBS128_ms,Throughput_BS1_sps,Throughput_BS128_sps,PeakMem_MB,DiskSize_MB,NParams,TrainTime_h,TrainTime_std_h,CostRatio,RealtimeCapable,PredPerDay,TrainEnergy_kWh,TrainCO2_kg
+Random Forest,4.2868,0.4275,0.255,0.142,13.758,0.541,14.215,72.7,9004.7,0.3,517.2,200 trees,0.793,0.0,1.0,True,6281280.0,0.0357,0.0083
+XGBoost,4.4287,0.3717,0.257,0.053,3.146,0.062,34.894,317.9,3668.3,0.0,270.4,200 trees,0.093,0.0,2.5,True,27466560.0,0.0042,0.001
+LSTM,4.6669,0.2922,0.002,0.001,6.479,0.204,182.586,154.3,701.0,31.9,0.8,220768,1.123,0.0,12.8,True,13331520.0,0.0505,0.0118

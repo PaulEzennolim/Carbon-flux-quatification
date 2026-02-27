@@ -1,0 +1,52 @@
+==========================================================================================
+COMPUTATIONAL EFFICIENCY ANALYSIS — CARBON FLUX FORECASTING MODELS
+Generated: 2026-02-27 13:48:54
+Hardware:  CPU-only (no GPU)  |  45.0W TDP assumed
+Carbon intensity: 0.233 kg CO₂/kWh (UK grid average 2024)
+==========================================================================================
+
+── SUMMARY TABLE ─────────────────────────────────────────────────
+
+Model                RMSE     R²  Train(h)  Infer(ms)  Size(MB)  Mem(MB)  Throughput  CostRatio
+──────────────────────────────────────────────────────────────────────────────────────────
+Random Forest       4.287  0.427      0.79      13.76       517        0       9,005        1.0×
+XGBoost             4.429  0.372      0.09       3.15       270        0       3,668        2.5×
+LSTM                4.667  0.292      1.12       6.48         1       32         701       12.8×
+
+Notes:
+  RMSE/R² averaged over UK-AMo and SE-Htm test sites.
+  Training time = scaled estimate from mini-training on a subset.
+  Inference time = single-sample (BS=1), mean over 10 repetitions.
+  Throughput = samples/second at batch size 128.
+  Cost Ratio = relative to Random Forest throughput at BS=128.
+  Real-time threshold = 100 ms (operational NEE forecasting).
+
+── DEPLOYMENT ANALYSIS ────────────────────────────────────────────────────────
+
+  Random Forest:
+    Real-time capable (<100 ms) : YES
+    Predictions per day (BS=1) : 6,281,280
+    Disk size                  : 517 MB
+    Training energy            : 0.0357 kWh  (0.0083 kg CO₂)
+
+  XGBoost:
+    Real-time capable (<100 ms) : YES
+    Predictions per day (BS=1) : 27,466,560
+    Disk size                  : 270 MB
+    Training energy            : 0.0042 kWh  (0.0010 kg CO₂)
+
+  LSTM:
+    Real-time capable (<100 ms) : YES
+    Predictions per day (BS=1) : 13,331,520
+    Disk size                  : 1 MB
+    Training energy            : 0.0505 kWh  (0.0118 kg CO₂)
+
+── BATCH-SIZE THROUGHPUT TABLE ────────────────────────────────────────────────
+
+Model              BS=   1  BS=  32  BS= 128  BS= 500
+──────────────────────────────────────────────────────────
+Random Forest              73     2,349     9,005    20,398
+XGBoost                   318     1,471     3,668     9,230
+LSTM                      154       366       701       971
+
+==========================================================================================
