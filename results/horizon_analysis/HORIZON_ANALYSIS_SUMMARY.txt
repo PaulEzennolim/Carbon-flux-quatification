@@ -1,0 +1,93 @@
+=====================================================================================
+HORIZON-SPECIFIC FORECASTING ANALYSIS — CARBON FLUX PREDICTION
+Generated : 2026-02-27 17:52:37
+Horizon   : 1–96 hours
+Sites     : UK-AMo (Wetland), SE-Htm (Forest)
+=====================================================================================
+
+── R² AT KEY HORIZONS ────────────────────────────────────────────────────────
+
+Model                  Site       h=  1h h=  3h h=  6h h= 12h h= 24h h= 48h h= 72h h= 96h
+─────────────────────────────────────────────────────────────────────────────────────────
+LSTM                   SE-Htm      0.338  0.340  0.331  0.338  0.276  0.210  0.155  0.151
+Random Forest          SE-Htm      0.377  0.362  0.357  0.342  0.313  0.262  0.211  0.197
+TEMPO Fine-Tuned       SE-Htm      0.886  0.795  0.778  0.774  0.748  0.730  0.706  0.681
+TEMPO Zero-Shot        SE-Htm      0.862  0.796  0.771  0.769  0.763  0.753  0.743  0.742
+XGBoost                SE-Htm      0.404  0.398  0.383  0.336  0.295  0.270  0.256  0.175
+LSTM                   UK-AMo      0.586  0.510  0.473  0.448  0.443  0.384  0.254  0.222
+Random Forest          UK-AMo      0.747  0.720  0.697  0.661  0.638  0.569  0.520  0.487
+TEMPO Fine-Tuned       UK-AMo      0.879  0.735  0.697  0.702  0.683  0.600  0.542  0.481
+TEMPO Zero-Shot        UK-AMo      0.814  0.618  0.518  0.469  0.558  0.396  0.311  0.255
+XGBoost                UK-AMo      0.732  0.594  0.565  0.550  0.508  0.452  0.414  0.374
+
+── THRESHOLD CROSSINGS (first horizon where R² < threshold) ─────────────────
+
+Model                  Site        R²<0.6 at h  R²<0.5 at h  R²<0.3 at h
+──────────────────────────────────────────────────────────────────────
+LSTM                   SE-Htm              1h          1h         17h
+Random Forest          SE-Htm              1h          1h         33h
+TEMPO Fine-Tuned       SE-Htm           > 96h       > 96h       > 96h
+TEMPO Zero-Shot        SE-Htm           > 96h       > 96h       > 96h
+XGBoost                SE-Htm              1h          1h         23h
+LSTM                   UK-AMo              1h          4h         69h
+Random Forest          UK-AMo             34h         81h       > 96h
+TEMPO Fine-Tuned       UK-AMo             46h         85h       > 96h
+TEMPO Zero-Shot        UK-AMo              4h          8h         62h
+XGBoost                UK-AMo              3h         28h       > 96h
+
+── DEGRADATION RATES (linear fit: R²(h) = a·h + b) ─────────────────────────
+
+Model                  Site        Slope(R²/h)   R²_h=1  R²_h=96  Half-life(h)
+────────────────────────────────────────────────────────────────────────────────────
+LSTM                   SE-Htm         -0.00226   0.3379   0.1513          56.0
+Random Forest          SE-Htm         -0.00185   0.3772   0.1967           >96
+TEMPO Fine-Tuned       SE-Htm         -0.00123   0.8864   0.6813           >96
+TEMPO Zero-Shot        SE-Htm         -0.00049   0.8623   0.7422           >96
+XGBoost                SE-Htm         -0.00113   0.4037   0.1748          96.0
+LSTM                   UK-AMo         -0.00322   0.5858   0.2224          71.0
+Random Forest          UK-AMo         -0.00244   0.7473   0.4871           >96
+TEMPO Fine-Tuned       UK-AMo         -0.00279   0.8787   0.4814           >96
+TEMPO Zero-Shot        UK-AMo         -0.00381   0.8135   0.2550          30.0
+XGBoost                UK-AMo         -0.00233   0.7321   0.3737           >96
+
+── TEMPO FINE-TUNED ADVANTAGE vs BEST BASELINE (RMSE) ──────────────────────
+
+  UK-AMo (Wetland):
+    h=  1h:  +30.7%  (better than best baseline)
+    h=  3h:  +2.7%  (better than best baseline)
+    h=  6h:  -0.0%  (worse  than best baseline)
+    h= 12h:  +6.3%  (better than best baseline)
+    h= 24h:  +6.4%  (better than best baseline)
+    h= 48h:  +3.6%  (better than best baseline)
+    h= 72h:  +2.3%  (better than best baseline)
+    h= 96h:  -0.6%  (worse  than best baseline)
+
+  SE-Htm (Forest):
+    h=  1h:  +56.4%  (better than best baseline)
+    h=  3h:  +41.6%  (better than best baseline)
+    h=  6h:  +40.0%  (better than best baseline)
+    h= 12h:  +41.4%  (better than best baseline)
+    h= 24h:  +39.4%  (better than best baseline)
+    h= 48h:  +39.2%  (better than best baseline)
+    h= 72h:  +37.1%  (better than best baseline)
+    h= 96h:  +37.0%  (better than best baseline)
+
+── NARRATIVE STATEMENTS ────────────────────────────────────────
+
+  [UK-AMo (Wetland)]
+  - Best model at 24h: TEMPO Fine-Tuned (R²=0.683)
+  - Best model at 96h: Random Forest (R²=0.487)
+  - TEMPO Zero-Shot maintains R²>0.6 to 4h, R²>0.5 to 8h
+  - TEMPO Fine-Tuned maintains R²>0.6 to 46h, R²>0.5 to 85h
+  - Slowest-degrading baseline: XGBoost (-0.00233 R²/h)
+  - Fastest-degrading baseline: LSTM (-0.00322 R²/h)
+
+  [SE-Htm (Forest)]
+  - Best model at 24h: TEMPO Zero-Shot (R²=0.763)
+  - Best model at 96h: TEMPO Zero-Shot (R²=0.742)
+  - TEMPO Zero-Shot maintains R²>0.6 to >96h, R²>0.5 to >96h
+  - TEMPO Fine-Tuned maintains R²>0.6 to >96h, R²>0.5 to >96h
+  - Slowest-degrading baseline: XGBoost (-0.00113 R²/h)
+  - Fastest-degrading baseline: LSTM (-0.00226 R²/h)
+
+=====================================================================================
