@@ -1,6 +1,6 @@
 ==========================================================================================
 COMPUTATIONAL EFFICIENCY ANALYSIS — CARBON FLUX FORECASTING MODELS
-Generated: 2026-02-27 13:48:54
+Generated: 2026-02-27 17:17:24
 Hardware:  CPU-only (no GPU)  |  45.0W TDP assumed
 Carbon intensity: 0.233 kg CO₂/kWh (UK grid average 2024)
 ==========================================================================================
@@ -9,9 +9,9 @@ Carbon intensity: 0.233 kg CO₂/kWh (UK grid average 2024)
 
 Model                RMSE     R²  Train(h)  Infer(ms)  Size(MB)  Mem(MB)  Throughput  CostRatio
 ──────────────────────────────────────────────────────────────────────────────────────────
-Random Forest       4.287  0.427      0.79      13.76       517        0       9,005        1.0×
-XGBoost             4.429  0.372      0.09       3.15       270        0       3,668        2.5×
-LSTM                4.667  0.292      1.12       6.48         1       32         701       12.8×
+Random Forest       4.287  0.427      0.79      13.81       517        4       9,373        1.0×
+XGBoost             4.429  0.372      0.09       3.19       270        1       3,690        2.5×
+LSTM                4.667  0.292      1.11       6.75         1      116         734       12.8×
 
 Notes:
   RMSE/R² averaged over UK-AMo and SE-Htm test sites.
@@ -25,28 +25,28 @@ Notes:
 
   Random Forest:
     Real-time capable (<100 ms) : YES
-    Predictions per day (BS=1) : 6,281,280
+    Predictions per day (BS=1) : 6,255,360
     Disk size                  : 517 MB
-    Training energy            : 0.0357 kWh  (0.0083 kg CO₂)
+    Training energy            : 0.0356 kWh  (0.0083 kg CO₂)
 
   XGBoost:
     Real-time capable (<100 ms) : YES
-    Predictions per day (BS=1) : 27,466,560
+    Predictions per day (BS=1) : 27,051,840
     Disk size                  : 270 MB
-    Training energy            : 0.0042 kWh  (0.0010 kg CO₂)
+    Training energy            : 0.0041 kWh  (0.0010 kg CO₂)
 
   LSTM:
     Real-time capable (<100 ms) : YES
-    Predictions per day (BS=1) : 13,331,520
+    Predictions per day (BS=1) : 12,795,840
     Disk size                  : 1 MB
-    Training energy            : 0.0505 kWh  (0.0118 kg CO₂)
+    Training energy            : 0.0499 kWh  (0.0116 kg CO₂)
 
 ── BATCH-SIZE THROUGHPUT TABLE ────────────────────────────────────────────────
 
 Model              BS=   1  BS=  32  BS= 128  BS= 500
 ──────────────────────────────────────────────────────────
-Random Forest              73     2,349     9,005    20,398
-XGBoost                   318     1,471     3,668     9,230
-LSTM                      154       366       701       971
+Random Forest              72     2,331     9,373    28,249
+XGBoost                   313     1,466     3,690     9,066
+LSTM                      148       475       734       990
 
 ==========================================================================================

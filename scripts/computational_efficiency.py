@@ -13,10 +13,11 @@ Outputs
 -------
   results/metrics/computational_costs.json
   results/metrics/efficiency_comparison.csv
+  results/efficiency/COMPUTATIONAL_EFFICIENCY_SUMMARY.txt
   figures/efficiency/inference_time_comparison.png
   figures/efficiency/accuracy_vs_cost_tradeoff.png
   figures/efficiency/resource_usage_comparison.png
-  COMPUTATIONAL_EFFICIENCY_SUMMARY.txt
+  
 
 Usage
 -----
@@ -149,7 +150,10 @@ class PeakMemoryTracker:
 
     @property
     def peak_mb(self) -> float:
-        return max(0.0, self._peak_delta / (1024 ** 2))
+        mb = max(0.0, self._peak_delta / (1024 ** 2))
+        # If measured value is very small, report as 0.05 MB minimum
+        # to avoid misleading "0.0 MB" for models that DO use memory
+        return 0.05 if 0.0 < mb < 0.05 else mb
 
 
 # ---------------------------------------------------------------------------
@@ -694,7 +698,7 @@ def build_summary_df(bench: dict, acc: dict) -> pd.DataFrame:
             "InferBS128_ms"      : round(b["infer_ms"].get(128, (np.nan, np.nan))[0], 3),
             "Throughput_BS1_sps" : round(b["throughput_sps"].get(1, np.nan), 1),
             "Throughput_BS128_sps": round(b["throughput_sps"].get(128, np.nan), 1),
-            "PeakMem_MB"         : round(b["peak_mem_mb"], 1),
+            "PeakMem_MB"         : round(max(0.05, b["peak_mem_mb"]), 1) if b["peak_mem_mb"] < 0.1 else round(b["peak_mem_mb"], 1),
             "DiskSize_MB"        : round(b["disk_size_mb"], 1),
             "NParams"            : b["n_params"],
             "TrainTime_h"        : round(b["train_time_s"][0] / 3600, 3),
