@@ -1,0 +1,114 @@
+=====================================================================================
+TRANSFER LEARNING ANALYSIS — CARBON FLUX PREDICTION
+Generated : 2026-02-28 20:52:09
+=====================================================================================
+
+── STUDY DESIGN ─────────────────────────────────────────────────────────────
+
+  Training: 5 WETLAND sites (combined in train_X/y)
+    FI-Lom  Subarctic minerotrophic fen (Finland)
+    GL-ZaF  High Arctic tundra fen (Greenland)
+    IE-Cra  Ombrotrophic raised bog (Ireland)
+    DE-Akm  Rewetted coastal peatland (Germany)
+    FR-LGt  Acidic fen (France)
+
+  Test sites (held-out):
+    UK-AMo  Blanket bog, UK       → Wetland-to-Wetland transfer
+    SE-Htm  Norway spruce, Sweden → Wetland-to-Forest transfer
+
+── H1: TRAINING DATA COVERAGE EFFECTS ───────────────────────────────────────
+
+  UK-AMo (Wetland (Blanket bog)):
+    Random Forest    R²@20%=-0.163 → R²@100%=0.559  (+443.2%, improves with more data)
+    XGBoost          R²@20%=0.019 → R²@100%=0.532  (+2728.8%, improves with more data)
+    LSTM             R²@20%=0.062 → R²@100%=0.468  (+653.8%, improves with more data)
+  SE-Htm (Forest (Norway spruce)):
+    Random Forest    R²@20%=0.344 → R²@100%=0.332  (-3.4%, degrades with more data)
+    XGBoost          R²@20%=0.206 → R²@100%=0.376  (+82.5%, improves with more data)
+    LSTM             R²@20%=0.054 → R²@100%=0.184  (+238.7%, improves with more data)
+
+── H2: LEAVE-ONE-SITE-OUT SENSITIVITY ───────────────────────────────────────
+
+  Impact on UK-AMo:
+    Random Forest:
+      Excl. LOO: −DE-Akm          ΔR²=-0.2031  (most harmful removal)
+      Excl. LOO: −GL-ZaF          ΔR²=+0.0126  (most beneficial removal)
+    XGBoost:
+      Excl. LOO: −DE-Akm          ΔR²=-0.1542  (most harmful removal)
+      Excl. LOO: −FR-LGt          ΔR²=+0.0155  (most beneficial removal)
+    LSTM:
+      Excl. LOO: −FI-Lom          ΔR²=-0.1269  (most harmful removal)
+      Excl. LOO: −IE-Cra          ΔR²=+0.0521  (most beneficial removal)
+  Impact on SE-Htm:
+    Random Forest:
+      Excl. LOO: −IE-Cra          ΔR²=-0.1051  (most harmful removal)
+      Excl. LOO: −FR-LGt          ΔR²=+0.0831  (most beneficial removal)
+    XGBoost:
+      Excl. LOO: −IE-Cra          ΔR²=-0.0353  (most harmful removal)
+      Excl. LOO: −FR-LGt          ΔR²=+0.0632  (most beneficial removal)
+    LSTM:
+      Excl. LOO: −FI-Lom          ΔR²=-0.1180  (most harmful removal)
+      Excl. LOO: −FR-LGt          ΔR²=+0.1255  (most beneficial removal)
+
+── H3: TEMPO vs BASELINES FOR CROSS-ECOSYSTEM TRANSFER ─────────────────────
+
+  UK-AMo:
+    TEMPO Fine-Tuned     R²=0.599
+    TEMPO Zero-Shot      R²=0.384
+    Random Forest        R²=0.559
+    XGBoost              R²=0.532
+    LSTM                 R²=0.468
+    → TEMPO Fine-Tuned advantage vs best baseline: +7.1%
+  SE-Htm:
+    TEMPO Fine-Tuned     R²=0.728
+    TEMPO Zero-Shot      R²=0.752
+    Random Forest        R²=0.332
+    XGBoost              R²=0.376
+    LSTM                 R²=0.184
+    → TEMPO Fine-Tuned advantage vs best baseline: +93.7%
+
+── H4: CROSS-ECOSYSTEM TRANSFER PENALTY (Wetland R² − Forest R²) ───────────
+
+    Random Forest        UK-AMo R²=0.559, SE-Htm R²=0.332, Penalty=+0.227 (+40.6%)
+    XGBoost              UK-AMo R²=0.532, SE-Htm R²=0.376, Penalty=+0.157 (+29.4%)
+    LSTM                 UK-AMo R²=0.468, SE-Htm R²=0.184, Penalty=+0.285 (+60.8%)
+    TEMPO Fine-Tuned     UK-AMo R²=0.599, SE-Htm R²=0.728, Penalty=-0.129 (-21.6%)
+
+── NEGATIVE TRANSFER CASES (R² < 100%-baseline − 0.01) ─────────────────────
+
+  33 cases detected:
+    20% data                  | Random Forest    | UK-AMo: R²=-0.163 (Δ=-0.722)
+    20% data                  | XGBoost          | UK-AMo: R²=0.019 (Δ=-0.514)
+    20% data                  | XGBoost          | SE-Htm: R²=0.206 (Δ=-0.170)
+    20% data                  | LSTM             | UK-AMo: R²=0.062 (Δ=-0.406)
+    20% data                  | LSTM             | SE-Htm: R²=0.054 (Δ=-0.129)
+    40% data                  | Random Forest    | UK-AMo: R²=0.184 (Δ=-0.375)
+    40% data                  | Random Forest    | SE-Htm: R²=0.272 (Δ=-0.060)
+    40% data                  | XGBoost          | UK-AMo: R²=0.355 (Δ=-0.177)
+    40% data                  | XGBoost          | SE-Htm: R²=0.319 (Δ=-0.056)
+    40% data                  | LSTM             | UK-AMo: R²=-0.004 (Δ=-0.472)
+    40% data                  | LSTM             | SE-Htm: R²=0.147 (Δ=-0.037)
+    60% data                  | Random Forest    | UK-AMo: R²=0.404 (Δ=-0.155)
+    60% data                  | Random Forest    | SE-Htm: R²=0.315 (Δ=-0.017)
+    60% data                  | XGBoost          | UK-AMo: R²=0.431 (Δ=-0.101)
+    60% data                  | XGBoost          | SE-Htm: R²=0.349 (Δ=-0.027)
+    60% data                  | LSTM             | UK-AMo: R²=0.140 (Δ=-0.329)
+    LOO: −FI-Lom              | Random Forest    | SE-Htm: R²=0.255 (Δ=-0.077)
+    LOO: −FI-Lom              | XGBoost          | SE-Htm: R²=0.353 (Δ=-0.022)
+    LOO: −FI-Lom              | LSTM             | UK-AMo: R²=0.342 (Δ=-0.127)
+    LOO: −FI-Lom              | LSTM             | SE-Htm: R²=0.066 (Δ=-0.118)
+    LOO: −GL-ZaF              | Random Forest    | SE-Htm: R²=0.316 (Δ=-0.016)
+    LOO: −GL-ZaF              | XGBoost          | SE-Htm: R²=0.357 (Δ=-0.019)
+    LOO: −GL-ZaF              | LSTM             | UK-AMo: R²=0.434 (Δ=-0.034)
+    LOO: −GL-ZaF              | LSTM             | SE-Htm: R²=0.150 (Δ=-0.034)
+    LOO: −IE-Cra              | Random Forest    | UK-AMo: R²=0.503 (Δ=-0.056)
+    LOO: −IE-Cra              | Random Forest    | SE-Htm: R²=0.227 (Δ=-0.105)
+    LOO: −IE-Cra              | XGBoost          | UK-AMo: R²=0.516 (Δ=-0.016)
+    LOO: −IE-Cra              | XGBoost          | SE-Htm: R²=0.340 (Δ=-0.035)
+    LOO: −DE-Akm              | Random Forest    | UK-AMo: R²=0.356 (Δ=-0.203)
+    LOO: −DE-Akm              | Random Forest    | SE-Htm: R²=0.248 (Δ=-0.084)
+    LOO: −DE-Akm              | XGBoost          | UK-AMo: R²=0.378 (Δ=-0.154)
+    LOO: −DE-Akm              | LSTM             | UK-AMo: R²=0.432 (Δ=-0.036)
+    LOO: −DE-Akm              | LSTM             | SE-Htm: R²=0.083 (Δ=-0.101)
+
+=====================================================================================
