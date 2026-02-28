@@ -530,7 +530,7 @@ def build_degradation_df(all_metrics: dict) -> pd.DataFrame:
                 "R2_h1"          : round(float(r2[0]),     4),
                 "R2_h96"         : round(float(r2[-1]),    4),
                 "HalfLife_h"     : round(hl, 1) if not np.isnan(hl) else np.nan,
-                "Slope_pvalue"   : round(float(pv), 4) if not np.isnan(pv) else np.nan,
+                "Slope_pvalue": (f"{pv:.2e}" if not np.isnan(pv) else np.nan),
             })
     return pd.DataFrame(rows)
 

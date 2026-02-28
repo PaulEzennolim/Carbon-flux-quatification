@@ -1,6 +1,6 @@
 =====================================================================================
 HORIZON-SPECIFIC FORECASTING ANALYSIS — CARBON FLUX PREDICTION
-Generated : 2026-02-27 17:52:37
+Generated : 2026-02-28 11:26:16
 Horizon   : 1–96 hours
 Sites     : UK-AMo (Wetland), SE-Htm (Forest)
 =====================================================================================
