@@ -57,6 +57,7 @@ jupyter_core==5.8.1
 
 # === Utilities ===
 tqdm==4.67.1
+psutil==5.8.0
 PyYAML==6.0.3
 regex==2024.11.6
 requests==2.32.4
