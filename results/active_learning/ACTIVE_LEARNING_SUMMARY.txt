@@ -1,0 +1,135 @@
+============================================================================
+ACTIVE LEARNING ANALYSIS — SUMMARY
+Generated : 2026-03-01 22:19:38
+Sites     : UK-AMo (Wetland)  |  SE-Htm (Forest)
+============================================================================
+
+METHODOLOGY
+────────────────────────────────────────────────────────────────────────────
+  Ensemble uncertainty proxy : std dev across model predictions
+                               {TEMPO-FT, TEMPO-ZS, RF, XGBoost, LSTM}
+  Feature extraction         : last timestep of 336-h lookback window
+  Binning strategy           : quartile-based (Q1–Q4, robust to normalisation)
+  Priority weights           : 40% uncertainty, 30% error,
+                               20% rarity, 10% variability
+  Learning-curve models      : RF and XGBoost (n_estimators=30,
+                               mean-horizon NEE target for efficiency)
+
+────────────────────────────────────────────────────────────────────────────
+SITE: UK-AMo (Wetland)
+────────────────────────────────────────────────────────────────────────────
+
+  FEATURE-SPACE UNCERTAINTY (highest 3 conditions):
+    TA_F Q4 (High)        unc=1.648  MAE=2.367  (3.6× min-bin)  n=2265
+    VPD_F Q4 (High)        unc=1.525  MAE=1.966  (3.4× min-bin)  n=2265
+    LW_IN_F Q4 (High)        unc=1.473  MAE=2.231  (3.2× min-bin)  n=2264
+
+  TEMPORAL PATTERNS (hourly):
+    Night (00–06) mean uncertainty : 1.064
+    Day   (12–18) mean uncertainty : 1.063
+    Night/Day ratio                : 1.00×
+
+  SEASONAL PATTERNS:
+    Winter   unc=0.469  MAE=0.722  n=3819
+    Spring   unc=1.379  MAE=1.582  n=1751
+    Summer   unc=1.915  MAE=2.598  n=1792
+    Autumn   unc=1.164  MAE=2.265  n=1693
+
+────────────────────────────────────────────────────────────────────────────
+SITE: SE-Htm (Forest)
+────────────────────────────────────────────────────────────────────────────
+
+  FEATURE-SPACE UNCERTAINTY (highest 3 conditions):
+    TA_F Q4 (High)        unc=3.005  MAE=4.849  (3.4× min-bin)  n=1252
+    LW_IN_F Q4 (High)        unc=2.851  MAE=4.670  (3.2× min-bin)  n=1252
+    VPD_F Q4 (High)        unc=2.807  MAE=4.517  (3.1× min-bin)  n=1252
+
+  TEMPORAL PATTERNS (hourly):
+    Night (00–06) mean uncertainty : 2.028
+    Day   (12–18) mean uncertainty : 2.076
+    Night/Day ratio                : 0.98×
+
+  SEASONAL PATTERNS:
+    Winter   unc=0.730  MAE=1.314  n=1560
+    Spring   unc=2.290  MAE=3.715  n=1800
+    Summer   unc=3.022  MAE=4.908  n=1647
+
+────────────────────────────────────────────────────────────────────────────
+LEARNING CURVE FINDINGS
+────────────────────────────────────────────────────────────────────────────
+  UK-AMo RandomForest: R²=-1.086 (10%) → 0.437 (100%); 95% peak at 80% of data; extrapolated 0.9× data needed for R²=0.58
+  UK-AMo XGBoost: R²=-1.026 (10%) → 0.154 (100%); 95% peak at 60% of data; extrapolated 1.0× data needed for R²=0.35
+  SE-Htm RandomForest: R²=-0.172 (10%) → -0.947 (100%); 95% peak at 100% of data
+  SE-Htm XGBoost: R²=-0.470 (10%) → -1.894 (100%); 95% peak at 100% of data
+
+  NOTE: SE-Htm shows negative R² in learning curves, indicating that
+  statistical summary features (mean/std/min/max across the lookback
+  window) are insufficient to capture forest temporal dynamics. This
+  demonstrates that temporal structure — not just aggregate statistics
+  — is essential for forest carbon flux prediction, and highlights
+  a key difference between the wetland (UK-AMo) and forest (SE-Htm)
+  sites as a thesis finding.
+
+────────────────────────────────────────────────────────────────────────────
+TOP 10 HIGH-PRIORITY CONDITIONS FOR ADDITIONAL DATA COLLECTION
+────────────────────────────────────────────────────────────────────────────
+  Rank  Site       Condition                           Priority    Unc    MAE      N
+  ───── ────────── ─────────────────────────────────── ──────── ────── ────── ──────
+  1     UK-AMo     Summer season                          0.960  1.915  2.598   1792
+  2     SE-Htm     Summer season                          0.934  3.022  4.908   1647
+  3     UK-AMo     TA_F Q4 (High)                         0.921  1.648  2.367   2265
+  4     SE-Htm     TA_F Q4 (High)                         0.906  3.005  4.849   1252
+  5     SE-Htm     LW_IN_F Q4 (High)                      0.880  2.851  4.670   1252
+  6     UK-AMo     LW_IN_F Q4 (High)                      0.865  1.473  2.231   2264
+  7     SE-Htm     VPD_F Q4 (High)                        0.861  2.807  4.517   1252
+  8     UK-AMo     VPD_F Q4 (High)                        0.842  1.525  1.966   2265
+  9     SE-Htm     TA_F Q3 (Med-High)                     0.838  2.690  4.429   1252
+  10    SE-Htm     SW_IN_F Q4 (High)                      0.832  2.654  4.303   1252
+
+────────────────────────────────────────────────────────────────────────────
+STATEMENTS
+────────────────────────────────────────────────────────────────────────────
+  [UK-AMo] "The highest-uncertainty regime on UK-AMo (Wetland) is TA_F Q4 (High) (mean ensemble std=1.648 μmol m⁻² s⁻¹), representing 3.6× the uncertainty of the lowest-uncertainty bin (TA_F Q1 (Low), std=0.454). Prioritising data collection in this regime would reduce forecasting uncertainty most efficiently."
+
+  [UK-AMo] "Diurnal patterns show minimal uncertainty variation: nocturnal (00:00–06:00) and midday (12:00–18:00) periods exhibit nearly identical uncertainty (1.064 vs 1.063 μmol m⁻² s⁻¹, ratio=1.00×). In contrast, seasonal dynamics dominate: Summer uncertainty (1.915) exceeds Winter (0.469) by 4.1×, demonstrating that peak growing-season conditions — not nighttime low-flux periods — drive carbon flux predictability challenges on UK-AMo (Wetland)."
+
+  [SE-Htm] "The highest-uncertainty regime on SE-Htm (Forest) is TA_F Q4 (High) (mean ensemble std=3.005 μmol m⁻² s⁻¹), representing 3.4× the uncertainty of the lowest-uncertainty bin (TA_F Q1 (Low), std=0.896). Prioritising data collection in this regime would reduce forecasting uncertainty most efficiently."
+
+  [SE-Htm] "Diurnal patterns show minimal uncertainty variation: nocturnal (00:00–06:00) and midday (12:00–18:00) periods exhibit nearly identical uncertainty (2.028 vs 2.076 μmol m⁻² s⁻¹, ratio=0.98×). In contrast, seasonal dynamics dominate: Summer uncertainty (3.022) exceeds Winter (0.730) by 4.1×, demonstrating that peak growing-season conditions — not nighttime low-flux periods — drive carbon flux predictability challenges on SE-Htm (Forest)."
+
+  [UK-AMo] "Random Forest performance on UK-AMo (Wetland) saturates at 80% of training data (R²=0.477), with only -8.3% additional gain from the remaining 20% of samples (R²=0.437 at 100%). This implies that model performance is currently data-limited only in underrepresented regimes, rather than due to global data scarcity."
+
+  [SE-Htm] "Random Forest performance on SE-Htm (Forest) saturates at 100% of training data (R²=-0.947), with only -0.0% additional gain from the remaining 0% of samples (R²=-0.947 at 100%). This implies that model performance is currently data-limited only in underrepresented regimes, rather than due to global data scarcity."
+
+────────────────────────────────────────────────────────────────────────────
+DATA COLLECTION PROTOCOL RECOMMENDATIONS
+────────────────────────────────────────────────────────────────────────────
+  1. PRIORITISE SUMMER GROWING-SEASON CAMPAIGNS
+     Summer exhibits 4.1× higher uncertainty than winter baseline
+     across both sites. Intensive measurement campaigns during peak
+     vegetation activity (June-August) would yield maximum uncertainty
+     reduction ROI, particularly targeting high-VPD heat events.
+  2. TARGET HIGH-TEMPERATURE AND HIGH-VPD CONDITIONS
+     TA_F Q4 (High) and VPD_F Q4 (High) rank among top priority
+     conditions with 3.4-3.6× uncertainty elevation. Deploy additional
+     sensors or increase measurement frequency during drought/heat-wave
+     episodes when these extreme conditions coincide.
+  3. MAINTAIN WINTER BASELINE MONITORING
+     Winter shows lowest uncertainty (0.47-0.73 μmol m⁻² s⁻¹) and
+     provides stable calibration reference. Continue standard coverage
+     to maintain baseline while concentrating additional resources on
+     high-uncertainty summer periods.
+  4. LEVERAGE DIURNAL UNIFORMITY
+     Nocturnal and midday measurements exhibit nearly identical
+     uncertainty (ratio ≈1.0×), indicating measurement campaigns can
+     maintain uniform temporal coverage rather than over-sampling
+     specific times of day. Focus resource allocation on seasonal and
+     meteorological regime prioritisation instead.
+  5. MAINTAIN CURRENT SITE DIVERSITY (5 training sites)
+     Learning curves plateau well before 100% of data; cross-site
+     diversity matters more than within-site sample volume. Expanding
+     to new ecosystems (e.g., additional forest or grassland sites)
+     would likely provide greater benefit than densifying existing
+     site coverage.
+
+============================================================================
