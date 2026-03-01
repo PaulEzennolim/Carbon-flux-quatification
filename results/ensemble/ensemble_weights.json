@@ -1,0 +1,30 @@
+{
+  "UK-AMo": {
+    "Perf-Weighted": {
+      "TEMPO Fine-Tuned": 0.30598036403614604,
+      "XGBoost": 0.229153305253993,
+      "Random Forest": 0.29771518455262935,
+      "LSTM": 0.16715114615723164
+    },
+    "Optimized Weights": {
+      "TEMPO Fine-Tuned": 0.5434067109558554,
+      "XGBoost": 0.0,
+      "Random Forest": 0.37397410920906193,
+      "LSTM": 0.08261917983508277
+    }
+  },
+  "SE-Htm": {
+    "Perf-Weighted": {
+      "TEMPO Fine-Tuned": 0.5826986314997328,
+      "XGBoost": 0.17189458187577278,
+      "Random Forest": 0.15459688180517644,
+      "LSTM": 0.09080990481931812
+    },
+    "Optimized Weights": {
+      "TEMPO Fine-Tuned": 1.0,
+      "XGBoost": 0.0,
+      "Random Forest": 0.0,
+      "LSTM": 6.938893903907228e-18
+    }
+  }
+}

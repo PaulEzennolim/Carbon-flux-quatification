@@ -1,0 +1,114 @@
+==========================================================================
+ENSEMBLE MODELS — SUMMARY
+Sites: UK-AMo, SE-Htm  |  Horizon: 96h  |  Bootstrap n=1000
+==========================================================================
+
+──────────────────────────────────────────────────────────────────────────
+SITE: UK-AMo (Wetland)
+──────────────────────────────────────────────────────────────────────────
+Method                            R²            95% CI      RMSE       MAE   Skill
+──────────────────────────────────────────────────────────────────────────
+Stacking-Ridge                0.4334   [0.4090,0.4559]    2.3112    1.4770  0.4632
+Stacking-Lasso                0.4334   [0.4106,0.4568]    2.3113    1.4773  0.4632
+Stacking-ElasticNet           0.4334   [0.4116,0.4546]    2.3111    1.4771  0.4632
+Stacking-LinearReg            0.4334   [0.4124,0.4562]    2.3112    1.4770  0.4632
+Horizon-Adaptive              0.4172   [0.3955,0.4360]    2.3439    1.5576  0.4556
+Optimized Weights             0.4168   [0.3963,0.4402]    2.3448    1.5582  0.4554
+Selective-K2                  0.4140   [0.3943,0.4367]    2.3504    1.5943  0.4541
+Perf-Weighted                 0.4094   [0.3896,0.4262]    2.3597    1.6868  0.4519
+Simple Average                0.4046   [0.3877,0.4197]    2.3692    1.7093  0.4497
+Selective-K3                  0.4022   [0.3826,0.4177]    2.3740    1.7125  0.4486
+TEMPO Fine-Tuned              0.3524   [0.3255,0.3813]    2.4710    1.5325  0.4261
+Random Forest                 0.3445   [0.3286,0.3574]    2.4859    1.9202  0.4226
+XGBoost                       0.3143   [0.3009,0.3269]    2.5425    2.0046  0.4095
+LSTM                          0.3002   [0.2774,0.3217]    2.5686    1.7939  0.4034
+TEMPO Zero-Shot               0.2991   [0.2789,0.3218]    2.5706    1.5842  0.4029
+
+Method                         R²@1h   R²@6h  R²@24h  R²@48h  R²@96h
+──────────────────────────────────────────────────────────────────────────
+Stacking-Ridge                0.8233  0.6063  0.5437  0.4119  0.2976
+Stacking-Lasso                0.8233  0.6063  0.5437  0.4119  0.2976
+Stacking-ElasticNet           0.8233  0.6064  0.5437  0.4119  0.2977
+Stacking-LinearReg            0.8233  0.6063  0.5437  0.4119  0.2976
+Horizon-Adaptive              0.7877  0.5753  0.5254  0.4010  0.2889
+Optimized Weights             0.7847  0.5752  0.5250  0.4008  0.2881
+Selective-K2                  0.7758  0.5744  0.5224  0.3978  0.2838
+Perf-Weighted                 0.7359  0.5604  0.4988  0.3889  0.2971
+Simple Average                0.7169  0.5510  0.4872  0.3836  0.3017
+Selective-K3                  0.7476  0.5607  0.4975  0.3806  0.2729
+TEMPO Fine-Tuned              0.8298  0.5193  0.4847  0.3388  0.1844
+Random Forest                 0.6062  0.4902  0.4291  0.3302  0.2563
+XGBoost                       0.6332  0.4728  0.3772  0.2828  0.1934
+LSTM                          0.4936  0.4003  0.3317  0.2928  0.2686
+TEMPO Zero-Shot               0.7703  0.3849  0.4157  0.2671  0.2638
+
+STATEMENTS:
+  "Stacking-Ridge achieves R²=0.4334 on UK-AMo, representing +23.0% improvement over TEMPO Fine-Tuned (R²=0.3524; p=5.45e-122, 95% CI: [0.4090, 0.4559])"
+  "RMSE reduced by 6.5% (2.4710 → 2.3112 μmol m⁻² s⁻¹), demonstrating complementary error patterns."
+
+DIVERSITY HIGHLIGHTS:
+  Most complementary (lowest Q): TEMPO Zero-Shot × Random Forest (Q=0.816, r=0.816)
+  Most correlated pair: TEMPO Fine-Tuned × TEMPO Zero-Shot (r=0.905)
+  "Model diversity analysis reveals TEMPO Zero-Shot–Random Forest correlation of 0.82 enabling complementary error patterns."
+
+HORIZON-ADAPTIVE WEIGHTS:
+  short (h≤24): TEMPO Fine-Tuned: 0.56, Random Forest: 0.37, LSTM: 0.07, XGBoost: 0.00
+  → "TEMPO Fine-Tuned dominates short (h≤24) forecasts (w=0.56)"
+  long (h>24): TEMPO Fine-Tuned: 0.54, Random Forest: 0.38, LSTM: 0.09, XGBoost: 0.00
+  → "TEMPO Fine-Tuned dominates long (h>24) forecasts (w=0.54)"
+
+──────────────────────────────────────────────────────────────────────────
+SITE: SE-Htm (Forest)
+──────────────────────────────────────────────────────────────────────────
+Method                            R²            95% CI      RMSE       MAE   Skill
+──────────────────────────────────────────────────────────────────────────
+TEMPO Zero-Shot               0.7405   [0.7362,0.7448]    4.9018    3.6489  0.6388
+Stacking-ElasticNet           0.7283   [0.7246,0.7323]    5.0164    3.8407  0.6304
+Stacking-Lasso                0.7282   [0.7249,0.7322]    5.0168    3.8410  0.6304
+Stacking-Ridge                0.7281   [0.7237,0.7323]    5.0176    3.8417  0.6303
+Stacking-LinearReg            0.7281   [0.7242,0.7329]    5.0176    3.8417  0.6303
+TEMPO Fine-Tuned              0.7279   [0.7240,0.7314]    5.0197    3.8419  0.6302
+Optimized Weights             0.7279   [0.7242,0.7312]    5.0197    3.8419  0.6302
+Horizon-Adaptive              0.7279   [0.7240,0.7316]    5.0197    3.8419  0.6302
+Perf-Weighted                 0.6567   [0.6535,0.6601]    5.6387    4.4374  0.5846
+Selective-K2                  0.6243   [0.6215,0.6276]    5.8981    4.6883  0.5654
+Selective-K3                  0.5480   [0.5448,0.5510]    6.4695    5.2867  0.5233
+Simple Average                0.5116   [0.5081,0.5147]    6.7255    5.5495  0.5045
+Random Forest                 0.3327   [0.3281,0.3371]    7.8607    6.6607  0.4208
+XGBoost                       0.3284   [0.3258,0.3310]    7.8862    6.6250  0.4190
+LSTM                          0.3163   [0.3013,0.3297]    7.9568    6.5075  0.4138
+
+Method                         R²@1h   R²@6h  R²@24h  R²@48h  R²@96h
+──────────────────────────────────────────────────────────────────────────
+TEMPO Zero-Shot               0.8429  0.7473  0.7360  0.7405  0.7415
+Stacking-ElasticNet           0.8568  0.7368  0.7303  0.7449  0.6933
+Stacking-Lasso                0.8568  0.7368  0.7303  0.7448  0.6933
+Stacking-Ridge                0.8567  0.7367  0.7302  0.7448  0.6932
+Stacking-LinearReg            0.8567  0.7367  0.7302  0.7448  0.6932
+TEMPO Fine-Tuned              0.8714  0.7610  0.7284  0.7359  0.6910
+Optimized Weights             0.8714  0.7610  0.7284  0.7359  0.6910
+Horizon-Adaptive              0.8714  0.7610  0.7284  0.7359  0.6910
+Perf-Weighted                 0.8011  0.7236  0.6727  0.6528  0.5873
+Selective-K2                  0.7636  0.6829  0.6473  0.6147  0.5518
+Selective-K3                  0.6731  0.6326  0.5766  0.5383  0.4616
+Simple Average                0.6379  0.5924  0.5336  0.5024  0.4198
+Random Forest                 0.4430  0.4230  0.3771  0.3246  0.2435
+XGBoost                       0.4992  0.4710  0.3606  0.3087  0.2020
+LSTM                          0.3755  0.3623  0.3218  0.3097  0.2182
+
+STATEMENTS:
+  "Ensembling provides NO BENEFIT on SE-Htm: TEMPO Zero-Shot alone achieves R²=0.7405, outperforming best ensemble Stacking-ElasticNet (R²=0.7283, -1.6% degradation, p=1.22e-14)"
+  "High model correlation (TEMPO variants r=0.96) and extreme performance disparity (TEMPO R²≈0.73 vs baselines R²≈0.32) eliminate diversity benefits, demonstrating that ensembling is not always beneficial when one model family dominates."
+
+DIVERSITY HIGHLIGHTS:
+  Most complementary (lowest Q): TEMPO Zero-Shot × Random Forest (Q=0.332, r=0.860)
+  Most correlated pair: TEMPO Fine-Tuned × TEMPO Zero-Shot (r=0.962)
+  "Model diversity analysis reveals TEMPO Zero-Shot–Random Forest correlation of 0.86 enabling complementary error patterns."
+
+HORIZON-ADAPTIVE WEIGHTS:
+  short (h≤24): TEMPO Fine-Tuned: 1.00, XGBoost: 0.00, Random Forest: 0.00, LSTM: 0.00
+  → "TEMPO Fine-Tuned dominates short (h≤24) forecasts (w=1.00)"
+  long (h>24): TEMPO Fine-Tuned: 1.00, XGBoost: 0.00, Random Forest: 0.00, LSTM: 0.00
+  → "TEMPO Fine-Tuned dominates long (h>24) forecasts (w=1.00)"
+
+==========================================================================
