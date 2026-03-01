@@ -990,11 +990,22 @@ def main():
             print(f"  Warning: t-test failed for {comp} / {site}: {exc}")
             t_stat, p_val = float("nan"), float("nan")
 
+        # Handle numerical underflow (p=0.0 means p < ~1e-300)
+        p_val_store = p_val if p_val > 0.0 else 1e-300
+
         stat_rows.append({"Comparison": comp, "Site": site,
-                          "t_stat": float(t_stat), "p_value": float(p_val)})
-        sig  = ("***" if p_val < 0.001 else "**" if p_val < 0.01
+                          "t_stat": float(t_stat), "p_value": p_val_store})
+
+        sig  = ("***" if p_val <= 0.001 else "**" if p_val < 0.01
                 else "*" if p_val < 0.05 else "ns")
-        pstr = f"{p_val:.2e}" if p_val < 0.001 else f"{p_val:.4f}"
+
+        if p_val == 0.0:
+            pstr = "<1e-300"
+        elif p_val < 0.001:
+            pstr = f"{p_val:.2e}"
+        else:
+            pstr = f"{p_val:.4f}"
+
         print(f"  {comp} / {site}: t={t_stat:.3f}, p={pstr} {sig}")
 
     stat_df = pd.DataFrame(stat_rows)

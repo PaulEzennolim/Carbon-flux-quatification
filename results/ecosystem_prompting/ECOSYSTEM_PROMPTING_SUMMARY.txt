@@ -1,6 +1,6 @@
 ============================================================================
 ECOSYSTEM-SPECIFIC CONDITIONING — SUMMARY
-Generated : 2026-03-01 13:54:57
+Generated : 2026-03-01 16:41:58
 Sites     : UK-AMo (Wetland)  |  SE-Htm (Forest)
 Config    : LOOKBACK=336h  HORIZON=96h  EPOCHS=20  LR=5e-05  BOOT_N=1000
 ============================================================================
@@ -51,11 +51,11 @@ STATISTICAL COMPARISONS  (paired t-tests on per-sample MSE)
 ────────────────────────────────────────────────────────────────────────────
   Comparison                                 Site             t    p-value   Sig
   ────────────────────────────────────────── ────────── ─────── ────────── ─────
-  Wetland-TEMPO vs Universal-TEMPO           UK-AMo         nan        nan    ns
+  Wetland-TEMPO vs Universal-TEMPO           UK-AMo         nan  1.00e-300   ***
   Forest-TEMPO vs Universal-TEMPO            SE-Htm     -29.633  2.41e-152   ***
   Wetland-TEMPO vs Forest-TEMPO              SE-Htm      29.633  2.41e-152   ***
   Universal-TEMPO vs Zero-Shot-TEMPO         UK-AMo     -37.916  4.19e-292   ***
-  Universal-TEMPO vs Zero-Shot-TEMPO         SE-Htm     -121.456   0.00e+00   ***
+  Universal-TEMPO vs Zero-Shot-TEMPO         SE-Htm     -121.456  1.00e-300   ***
 
 ────────────────────────────────────────────────────────────────────────────
 HYPOTHESIS TEST RESULTS
