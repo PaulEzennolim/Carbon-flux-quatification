@@ -56,6 +56,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.multioutput import MultiOutputRegressor
 import xgboost as xgb
+import matplotlib.patches as mpatches
 
 warnings.filterwarnings("ignore")
 
@@ -679,14 +680,22 @@ def plot_learning_curves(lc_df: pd.DataFrame) -> None:
 def plot_priority_ranking(prio_df: pd.DataFrame) -> None:
     """Top-20 priority conditions as a horizontal bar chart."""
     top20 = prio_df.head(20).copy()
-
-    site_colors = {"UK-AMo": "#4C72B0", "SE-Htm": "#C44E52"}
+    top20["Site"] = top20["Site"].str.strip()
+    site_colors = {
+        "UK-AMo": "#4C72B0",
+        "SE-Htm": "#C44E52",
+    }
     colors = [site_colors.get(s, "grey") for s in top20["Site"]]
-
     fig, ax = plt.subplots(figsize=(10, 8))
     y_pos = np.arange(len(top20))
-    ax.barh(y_pos, top20["Priority_Score"], color=colors, alpha=0.85,
-            edgecolor="black", linewidth=0.4)
+    ax.barh(
+        y_pos,
+        top20["Priority_Score"],
+        color=colors,
+        alpha=0.85,
+        edgecolor="black",
+        linewidth=0.4,
+    )
     ax.set_yticks(y_pos)
     ax.set_yticklabels(
         [f"{r['Condition']}\n({r['Site']})" for _, r in top20.iterrows()],
@@ -694,11 +703,16 @@ def plot_priority_ranking(prio_df: pd.DataFrame) -> None:
     )
     ax.invert_yaxis()
     ax.set_xlabel("Priority Score (weighted)", fontsize=10)
-    ax.set_title("Top 20 High-Priority Conditions for Data Collection",
-                 fontsize=11, fontweight="bold")
-    for site, color in site_colors.items():
-        ax.barh([], [], color=color, label=site, alpha=0.85)
-    ax.legend(fontsize=9)
+    ax.set_title(
+        "Top 20 High-Priority Conditions for Data Collection",
+        fontsize=11,
+        fontweight="bold",
+    )
+    legend_handles = [
+        mpatches.Patch(color=site_colors["UK-AMo"], label="UK-AMo", alpha=0.85),
+        mpatches.Patch(color=site_colors["SE-Htm"], label="SE-Htm", alpha=0.85),
+    ]
+    ax.legend(handles=legend_handles, fontsize=9)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     plt.tight_layout()
