@@ -505,7 +505,7 @@ All figures are located in `figures/` and generated at **300 DPI** in both PNG a
 | Model comparison | `all_models_comparison.png` | R² and RMSE across all models and sites |
 | Transfer matrix | `transfer_learning/transfer_matrix_heatmap.png` | Cross-site transfer penalty heatmap |
 | Ensemble weights | `ensemble/weights_optimization.png` | Optimal ensemble weight distributions |
-| Uncertainty maps | `uncertainty/uncertainty_decomposition_SE-Htm/UK-AMo.png` | Ensemble std vs meteorological bins |
+| Uncertainty maps | `uncertainty/uncertainty_decomposition_SE-Htm uncertainty/uncertainty_decomposition_UK-AMO.png` | Ensemble std vs meteorological bins |
 | Learning curves | `active_learning/data_efficiency.png` | R² vs training data fraction |
 | Horizon decay | `horizon_analysis/model_comparison_by_horizon.png` | Forecast accuracy vs lead time |
 | Temporal uncertainty | `active_learning/temporal_uncertainty.png` | Uncertainty by hour, month, season |
