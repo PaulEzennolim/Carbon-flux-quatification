@@ -320,7 +320,7 @@ Carbon-flux-quatification/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/<your-username>/Carbon-flux-quatification.git
+git clone https://github.com/PaulEzennolim/Carbon-flux-quatification.git
 cd Carbon-flux-quatification
 
 # 2. Create and activate conda environment
@@ -417,7 +417,7 @@ python scripts/computational_efficiency.py
 python scripts/statistical_analysis.py
 ```
 
-### Expected Runtimes (Apple M1 Max, 64 GB RAM)
+### Expected Runtimes (Apple M4, 24 GB RAM)
 
 | Script | CPU runtime | GPU runtime |
 |---|---|---|
@@ -556,7 +556,7 @@ TEMPO vs XGBoost on SE-Htm: d = 1.87 (large effect)
 
 ## Computational Efficiency
 
-Benchmarked on Apple M1 Max (10-core CPU, 64 GB unified memory). GPU benchmarks
+Benchmarked on Apple M4 (10-core CPU, 24 GB unified memory). GPU benchmarks
 use MPS acceleration via PyTorch.
 
 | Model | Inference time (s) | Relative speed | Memory (GB) |
@@ -595,14 +595,14 @@ forecast accuracy is the primary objective and compute is not the bottleneck.
 If you use this code or findings in your research, please cite:
 
 ```bibtex
-@mastersthesis{ezennolim2026carbon,
-  title   = {Deep Learning for Carbon Flux Forecasting:
-             Foundation Models vs Traditional Approaches},
+@bachelorsthesis{ezennolim2026carbon,
+  title   = {Temporal-spatial data fusion for carbon flux quatification in agroecosystems:
+          a multimodal learning approach},
   author  = {Ezennolim, Paul},
   year    = {2026},
-  school  = {[University Name]},
-  type    = {{MSc} Thesis},
-  note    = {Code available at https://github.com/<username>/Carbon-flux-quatification}
+  school  = {Univeristy of Sheffield},
+  type    = {{BSc} Thesis},
+  note    = {Code available at https://github.com/PaulEzennolim/Carbon-flux-quatification.git}
 }
 ```
 
@@ -621,7 +621,7 @@ If you use this code or findings in your research, please cite:
 
 ## Acknowledgments
 
-- **Thesis supervisor** — for guidance on experimental design and statistical methodology
+- **Thesis supervisor: Professor Po Yang (po.yang@sheffield.ac.uk)** — for guidance on experimental design and statistical methodology
 - **FLUXNET community** — for maintaining the open FLUXNET2015 database and all site
   principal investigators who contributed data
 - **AutonLab (CMU)** — for open-sourcing the TEMPO-80M foundation model
@@ -636,10 +636,9 @@ If you use this code or findings in your research, please cite:
 | | |
 |---|---|
 | **Author** | Paul Ezennolim |
-| **Email** | [your.email@university.edu] |
-| **GitHub** | [@your-username](https://github.com/your-username) |
-| **ORCID** | [0000-0000-0000-0000](https://orcid.org/0000-0000-0000-0000) |
-| **LinkedIn** | [linkedin.com/in/your-profile](https://linkedin.com/in/your-profile) |
+| **Email** | [paulezennolim@icloud.com] |
+| **GitHub** | [@PaulEzennolim] |
+| **LinkedIn** | [https://www.linkedin.com/in/paul-ezennolim/] |
 
 ---
 
