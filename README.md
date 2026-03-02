@@ -286,7 +286,6 @@ Carbon-flux-quatification/
 │   ├── computational_efficiency.py     # Runtime and memory benchmarking
 │   ├── horizon_analysis.py       # Forecast degradation over horizon length
 │   ├── analyze_kgml_decomposition.py   # STL decomposition of NEE time series
-│   └── add_documentation.py     # Automated docstring / type-hint generator
 │
 ├── notebooks/
 │   ├── 01_data_exploration.ipynb       # EDA: flux distributions, seasonality
@@ -299,7 +298,7 @@ Carbon-flux-quatification/
 │   ├── transfer_learning/        # Cross-site transfer matrices
 │   └── uncertainty/              # Uncertainty decomposition CSVs
 │
-├── figures/                      # Publication-quality plots (300 DPI, PDF/PNG)
+├── figures/                      # Plots (300 DPI, PDF/PNG)
 │
 ├── .gitignore                    # Excludes data, checkpoints, large binaries
 ├── .gitattributes                # LFS-ready binary attributes; Unix line endings
