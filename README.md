@@ -502,20 +502,13 @@ All figures are located in `figures/` and generated at **300 DPI** in both PNG a
 
 | Figure | File | Description |
 |---|---|---|
-| Model comparison | `model_comparison.png` | R² and RMSE across all models and sites |
-| Transfer matrix | `transfer_learning_matrix.png` | Cross-site transfer penalty heatmap |
-| Ensemble weights | `ensemble_weights.png` | Optimal ensemble weight distributions |
-| Uncertainty maps | `uncertainty_by_feature.png` | Ensemble std vs meteorological bins |
-| Learning curves | `data_efficiency.png` | R² vs training data fraction |
-| Horizon decay | `horizon_analysis.png` | Forecast accuracy vs lead time |
-| Temporal uncertainty | `temporal_patterns.png` | Uncertainty by hour, month, season |
-
-**Figure standards:**
-- Font: Times New Roman, 10 pt axis labels, 12 pt titles
-- Colour palette: colorblind-accessible (Seaborn `colorblind`)
-- Consistent model colours: TEMPO purple `#8172B2`, XGBoost red `#C44E52`,
-  RF green `#55A868`, LSTM blue `#4C72B0`, Ensemble orange `#DD8452`
-- All axes labelled with units; all panels captioned
+| Model comparison | `all_models_comparison.png` | R² and RMSE across all models and sites |
+| Transfer matrix | `transfer_learning/transfer_matrix_heatmap.png` | Cross-site transfer penalty heatmap |
+| Ensemble weights | `ensemble/weights_optimization.png` | Optimal ensemble weight distributions |
+| Uncertainty maps | `uncertainty/uncertainty_decomposition_SE-Htm/UK-AMo.png` | Ensemble std vs meteorological bins |
+| Learning curves | `active_learning/data_efficiency.png` | R² vs training data fraction |
+| Horizon decay | `horizon_analysis/model_comparison_by_horizon.png` | Forecast accuracy vs lead time |
+| Temporal uncertainty | `active_learning/temporal_uncertainty.png` | Uncertainty by hour, month, season |
 
 ---
 
@@ -621,7 +614,7 @@ If you use this code or findings in your research, please cite:
 
 ## Acknowledgments
 
-- **Thesis supervisor: Professor Po Yang (po.yang@sheffield.ac.uk)** — for guidance on experimental design and statistical methodology
+- **Thesis supervisor: Professor Po Yang (https://sheffield.ac.uk/cs/people/academic/po-yang)** — for guidance on experimental design and statistical methodology
 - **FLUXNET community** — for maintaining the open FLUXNET2015 database and all site
   principal investigators who contributed data
 - **AutonLab (CMU)** — for open-sourcing the TEMPO-80M foundation model
