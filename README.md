@@ -1,7 +1,7 @@
 # Temporal-spatial data fusion for carbon flux quatification in agroecosystems: a multimodal learning approach
 ## Deep Learning for Carbon Flux Forecasting: Foundation Models vs Traditional Approaches
 
-**BSc Environmental Science Thesis** | 2025–2026
+**BSc Computer Science Thesis** | 2025–2026
 
 > Evaluating the TEMPO-80M time-series foundation model against LSTM, XGBoost, and Random Forest
 > baselines for net ecosystem exchange (NEE) prediction across European FLUXNET eddy-covariance sites,
