@@ -95,3 +95,6 @@ scripts/*.sh text eol=lf
 
 # Keep Windows line endings for batch files
 *.bat text eol=crlf
+
+# Change display language on github
+*.ipynb linguist-language=Python
