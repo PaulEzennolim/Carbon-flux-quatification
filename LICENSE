@@ -1,4 +1,4 @@
-Create a file called LICENSE in your project root:
+# License
 
 The MIT License (MIT)
 
@@ -27,8 +27,8 @@ SOFTWARE.
 This project uses the TEMPO time-series foundation model:
 Copyright (c) 2024 Defu Cao
 Licensed under the MIT License
-Original repository: https://github.com/DC-research/TEMPO
+Original repository: <https://github.com/DC-research/TEMPO>
 
 This project includes original contributions for carbon flux forecasting including
 baseline models, ensemble methods, transfer learning analysis, and active learning
-strategies developed as part of a Master's dissertation at the University of Sheffield.
+strategies developed as part of a BSc dissertation at the University of Sheffield.

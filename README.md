@@ -1,4 +1,5 @@
-# Temporal-spatial data fusion for carbon flux quatification in agroecosystems: a multimodal learning approach
+# Temporal-spatial data fusion for carbon flux quantification in agroecosystems: a multimodal learning approach
+
 ## Deep Learning for Carbon Flux Forecasting: Foundation Models vs Traditional Approaches
 
 **BSc Computer Science Thesis** | 2025–2026
@@ -58,7 +59,7 @@ This thesis addresses three open questions in the computational ecology literatu
 ### Novel Contributions
 
 | Contribution | Description |
-|---|---|
+| --- | --- |
 | **Inverted Transfer Penalty** | TEMPO achieves 21.6% *better* performance on a cross-ecosystem test site (forest) than on the same-ecosystem site (wetland), contradicting established transfer learning theory |
 | **Negative Transfer Quantification** | Systematic quantification: 33/60 ensemble configurations (55%) exhibit negative transfer, with effect sizes up to −1.6% R² |
 | **Honest Ensemble Failure Analysis** | First rigorous documentation that model-diversity-insufficient ensembles actively degrade performance on challenging sites |
@@ -142,11 +143,11 @@ Across 60 model × site × configuration combinations evaluated in the transfer 
 - LSTM shows **+60.8%** RMSE increase, the most vulnerable to ecosystem mismatch
 - TEMPO uniquely exhibits **inverted** transfer: −21.6% RMSE (improvement) on cross-ecosystem
 
-### Finding 3 — Ensemble Failure Conditions
+### Finding 3 — Site-Dependent Ensemble Outcomes
 
-On UK-AMo (wetland), weighted ensemble averaging (R² = 0.433) underperforms the best constituent
-model TEMPO fine-tuned (R² = 0.599) by **−27.7%**. On SE-Htm (forest), ensemble provides no
-improvement over TEMPO zero-shot (R² = 0.741 vs 0.741). Ensemble benefit only materialises when:
+Stacking ensembles provide +23% improvement on UK-AMo (Stacking-Ridge R² = 0.433 vs TEMPO
+Zero-Shot R² = 0.352), but no benefit on SE-Htm (−1.6% degradation vs TEMPO Zero-Shot
+R² = 0.741). Ensemble benefit only materialises when:
 
 1. Model errors are negatively correlated across the ensemble
 2. No single model has substantially higher accuracy than all others
@@ -172,7 +173,7 @@ Active learning analysis reveals that summer uncertainty exceeds winter uncertai
 ### FLUXNET2015 Sites
 
 | Role | Site Code | Ecosystem | Country | MAT (°C) | MAP (mm) |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | Training | FI-Lom | Wetland (fen) | Finland | 0.1 | 554 |
 | Training | GL-ZaF | Wetland (fen) | Greenland | −5.0 | 240 |
 | Training | IE-Cra | Wetland (fen) | Ireland | 9.9 | 854 |
@@ -187,7 +188,7 @@ per site depending on FLUXNET2015 Tier 1 availability.
 ### Input Features (19 variables)
 
 | Category | Variables |
-|---|---|
+| --- | --- |
 | Energy balance | SW_IN, LW_IN, NETRAD, G_F_MDS |
 | Meteorology | TA_F, PA_F, P_F, WS_F, WD |
 | Humidity | RH, VPD_F |
@@ -220,7 +221,7 @@ per site depending on FLUXNET2015 Tier 1 availability.
 ### Models Evaluated
 
 | Model | Type | Parameters | Training strategy |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **TEMPO-80M** | Foundation (transformer) | 80M | Zero-shot & fine-tuned (20 epochs) |
 | **XGBoost** | Gradient boosting | ~50K | Trained per-site with optuna HPO |
 | **Random Forest** | Ensemble trees | ~10M | Trained per-site, 200 estimators |
@@ -228,7 +229,7 @@ per site depending on FLUXNET2015 Tier 1 availability.
 
 ### Experimental Configuration
 
-```
+```text
 Lookback window  : 336 time steps (14 days at 1-hour resolution)
 Forecast horizon : 96 time steps  (4 days)
 Batch size       : 32
@@ -240,7 +241,7 @@ Random seed      : 42 (all experiments)
 ### Evaluation Metrics
 
 | Metric | Symbol | Notes |
-|---|---|---|
+| --- | --- | --- |
 | Coefficient of determination | R² | Primary accuracy metric |
 | Root mean squared error | RMSE | μmol m⁻² s⁻¹ |
 | Mean absolute error | MAE | μmol m⁻² s⁻¹ |
@@ -257,7 +258,7 @@ Random seed      : 42 (all experiments)
 
 ## Repository Structure
 
-```
+```text
 Carbon-flux-quatification/
 │
 ├── data/
@@ -417,10 +418,10 @@ python scripts/computational_efficiency.py
 python scripts/statistical_analysis.py
 ```
 
-### Expected Runtimes (Apple M4, 24 GB RAM)
+### Expected Runtimes (Apple M3 Max, 128 GB RAM)
 
 | Script | CPU runtime | GPU runtime |
-|---|---|---|
+| --- | --- | --- |
 | `tempo_data_prep.py` | ~5 min | — |
 | `train_baselines.py` | ~10 min | — |
 | `run_zero_shot_tempo.py` | ~3 min | <1 min |
@@ -467,21 +468,21 @@ python scripts/active_learning_analysis.py
 ### Primary Performance Table (R²)
 
 | Model | UK-AMo (Wetland) | SE-Htm (Forest) | Δ (Forest − Wetland) |
-|---|---|---|---|
-| XGBoost | 0.412 | 0.376 | −0.036 |
-| Random Forest | 0.398 | 0.351 | −0.047 |
-| LSTM | 0.387 | 0.329 | −0.058 |
-| TEMPO Zero-Shot | 0.521 | **0.741** | +0.220 |
+| --- | --- | --- | --- |
+| XGBoost | 0.464 | 0.279 | −0.185 |
+| Random Forest | 0.584 | 0.271 | −0.313 |
+| LSTM | 0.359 | 0.225 | −0.134 |
+| TEMPO Zero-Shot | 0.384 | **0.752** | +0.368 |
 | TEMPO Fine-Tuned | **0.599** | 0.728 | +0.129 |
-| Weighted Ensemble | 0.433 | 0.741 | +0.308 |
+| Stacking-Ridge Ensemble | 0.433 | 0.728 | +0.295 |
 
-> Ensemble underperforms best constituent model on both sites — see Finding 3.
+> Ensemble improves over TEMPO Zero-Shot on UK-AMo (+23%) but degrades on SE-Htm (−1.6%).
 
 ### Transfer Learning Transfer Penalty
 
 | Model | Same-ecosystem penalty | Cross-ecosystem penalty | Inverted? |
-|---|---|---|---|
-| XGBoost | — | +40.6% RMSE | No |
+| --- | --- | --- | --- |
+| XGBoost | — | +29.4% RMSE | No |
 | Random Forest | — | +40.6% RMSE | No |
 | LSTM | — | +60.8% RMSE | No |
 | **TEMPO** | — | **−21.6% RMSE** | **Yes** |
@@ -501,11 +502,12 @@ Top-3 high-uncertainty regimes (pooled across sites):
 All figures are located in `figures/` and generated at **300 DPI** in both PNG and PDF formats.
 
 | Figure | File | Description |
-|---|---|---|
+| --- | --- | --- |
 | Model comparison | `all_models_comparison.png` | R² and RMSE across all models and sites |
 | Transfer matrix | `transfer_learning/transfer_matrix_heatmap.png` | Cross-site transfer penalty heatmap |
 | Ensemble weights | `ensemble/weights_optimization.png` | Optimal ensemble weight distributions |
-| Uncertainty maps | `uncertainty/uncertainty_decomposition_SE-Htm uncertainty/uncertainty_decomposition_UK-AMO.png` | Ensemble std vs meteorological bins |
+| Uncertainty (SE-Htm) | `uncertainty/uncertainty_decomposition_SE-Htm.png` | Ensemble std vs meteorological bins |
+| Uncertainty (UK-AMo) | `uncertainty/uncertainty_decomposition_UK-AMo.png` | Ensemble std vs meteorological bins |
 | Learning curves | `active_learning/data_efficiency.png` | R² vs training data fraction |
 | Horizon decay | `horizon_analysis/model_comparison_by_horizon.png` | Forecast accuracy vs lead time |
 | Temporal uncertainty | `active_learning/temporal_uncertainty.png` | Uncertainty by hour, month, season |
@@ -519,7 +521,7 @@ All figures are located in `figures/` and generated at **300 DPI** in both PNG a
 All reported R² values include 95% bootstrap confidence intervals computed from
 n = 1000 stratified resamples of the test set. Example:
 
-```
+```text
 TEMPO Fine-Tuned on UK-AMo: R² = 0.599 [0.571, 0.628]
 ```
 
@@ -541,7 +543,7 @@ Bonferroni correction applied to all pairwise model comparisons within each site
 
 Cohen's d reported for all statistically significant comparisons:
 
-```
+```text
 TEMPO vs XGBoost on SE-Htm: d = 1.87 (large effect)
 ```
 
@@ -549,19 +551,19 @@ TEMPO vs XGBoost on SE-Htm: d = 1.87 (large effect)
 
 ## Computational Efficiency
 
-Benchmarked on Apple M4 (10-core CPU, 24 GB unified memory). GPU benchmarks
+Benchmarked on Apple M3 Max (128 GB unified memory). GPU benchmarks
 use MPS acceleration via PyTorch.
 
 | Model | Inference time (s) | Relative speed | Memory (GB) |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | XGBoost | 18.4 | 1.0× (baseline) | 0.8 |
 | Random Forest | 24.1 | 1.3× | 1.2 |
 | LSTM | 38.7 | 2.1× | 1.8 |
 | TEMPO (zero-shot) | 156.0 | 8.5× | 6.4 |
 | TEMPO (fine-tuned) | 156.0 | 8.5× | 6.4 |
 
-TEMPO's 8.5× inference overhead is justified by its R² advantage of +0.315 over the
-best baseline on SE-Htm and +0.187 on UK-AMo, making it the preferred model when
+TEMPO's 8.5× inference overhead is justified by its R² advantage of +0.449 over the
+best baseline on SE-Htm and +0.015 on UK-AMo, making it the preferred model when
 forecast accuracy is the primary objective and compute is not the bottleneck.
 
 ---
@@ -589,11 +591,11 @@ If you use this code or findings in your research, please cite:
 
 ```bibtex
 @bachelorsthesis{ezennolim2026carbon,
-  title   = {Temporal-spatial data fusion for carbon flux quatification in agroecosystems:
+  title   = {Temporal-spatial data fusion for carbon flux quantification in agroecosystems:
           a multimodal learning approach},
   author  = {Ezennolim, Paul},
   year    = {2026},
-  school  = {Univeristy of Sheffield},
+  school  = {University of Sheffield},
   type    = {{BSc} Thesis},
   note    = {Code available at https://github.com/PaulEzennolim/Carbon-flux-quatification.git}
 }
@@ -604,22 +606,22 @@ If you use this code or findings in your research, please cite:
 ## License
 
 | Component | License |
-|---|---|
+| --- | --- |
 | Source code (`models/`, `scripts/`) | [MIT License](LICENSE) |
 | FLUXNET2015 data | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — cite original data providers |
-| TEMPO-80M model weights | Apache 2.0 — cite [Goswami et al. 2024] |
+| TEMPO-80M model weights | MIT License — cite [Cao et al. 2024] |
 | Figures and text | CC BY 4.0 — cite this thesis |
 
 ---
 
 ## Acknowledgments
 
-- **Thesis supervisor: Professor Po Yang (https://sheffield.ac.uk/cs/people/academic/po-yang)** — for guidance on experimental design and statistical methodology
+- **Thesis supervisor:** [Professor Po Yang](https://sheffield.ac.uk/cs/people/academic/po-yang) — for guidance on experimental design and statistical methodology
 - **FLUXNET community** — for maintaining the open FLUXNET2015 database and all site
   principal investigators who contributed data
 - **AutonLab (CMU)** — for open-sourcing the TEMPO-80M foundation model
 - **ICOS RI** — for supporting eddy-covariance infrastructure across European sites
-- **Computational resources** — analyses performed on personal hardware (Apple M1 Max);
+- **Computational resources** — analyses performed on personal hardware (Apple M3 Max, 128 GB RAM);
   no HPC allocation required
 
 ---
@@ -627,11 +629,11 @@ If you use this code or findings in your research, please cite:
 ## Contact
 
 | | |
-|---|---|
+| --- | --- |
 | **Author** | Paul Ezennolim |
 | **Email** | [paulezennolim@icloud.com] |
 | **GitHub** | [@PaulEzennolim] |
-| **LinkedIn** | [https://www.linkedin.com/in/paul-ezennolim/] |
+| **LinkedIn** | [paul-ezennolim](https://www.linkedin.com/in/paul-ezennolim/) |
 
 ---
 
@@ -687,4 +689,4 @@ If you use this code or findings in your research, please cite:
 
 ---
 
-*Last updated: March 2026*
+Last updated: March 2026
