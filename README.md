@@ -418,7 +418,7 @@ python scripts/computational_efficiency.py
 python scripts/statistical_analysis.py
 ```
 
-### Expected Runtimes (Apple M3 Max, 128 GB RAM)
+### Expected Runtimes (Apple M3, 24 GB RAM)
 
 | Script | CPU runtime | GPU runtime |
 | --- | --- | --- |
