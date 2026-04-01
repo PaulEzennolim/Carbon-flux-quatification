@@ -236,4 +236,4 @@ wandb/
 !data/samples/*.npy
 
 # Writing
-*dissertation
+*thesis Writing
