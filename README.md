@@ -2,7 +2,7 @@
 
 ## Deep Learning for Carbon Flux Forecasting: Foundation Models vs Traditional Approaches
 
-**BSc Computer Science Thesis** | 2025–2026
+**BSc Computer Science Disseratation** | 2025–2026
 
 > Evaluating the TEMPO-80M time-series foundation model against LSTM, XGBoost, and Random Forest
 > baselines for net ecosystem exchange (NEE) prediction across European FLUXNET eddy-covariance sites,
@@ -47,7 +47,7 @@ but their transfer characteristics across ecosystem boundaries remain poorly und
 
 ### Research Motivation
 
-This thesis addresses three open questions in the computational ecology literature:
+This dissertation addresses three open questions in the computational ecology literature:
 
 1. Can foundation models pretrained on general time-series data achieve competitive or superior
    performance on domain-specific carbon flux forecasting without fine-tuning?
@@ -418,7 +418,7 @@ python scripts/computational_efficiency.py
 python scripts/statistical_analysis.py
 ```
 
-### Expected Runtimes (Apple M3, 24 GB RAM)
+### Expected Runtimes (Apple M4, 24 GB RAM)
 
 | Script | CPU runtime | GPU runtime |
 | --- | --- | --- |
@@ -551,7 +551,7 @@ TEMPO vs XGBoost on SE-Htm: d = 1.87 (large effect)
 
 ## Computational Efficiency
 
-Benchmarked on Apple M3 Max (128 GB unified memory). GPU benchmarks
+Benchmarked on Apple M4 (24 GB unified memory). GPU benchmarks
 use MPS acceleration via PyTorch.
 
 | Model | Inference time (s) | Relative speed | Memory (GB) |
@@ -590,13 +590,13 @@ forecast accuracy is the primary objective and compute is not the bottleneck.
 If you use this code or findings in your research, please cite:
 
 ```bibtex
-@bachelorsthesis{ezennolim2026carbon,
+@bachelorsdissertation{ezennolim2026carbon,
   title   = {Temporal-spatial data fusion for carbon flux quantification in agroecosystems:
           a multimodal learning approach},
   author  = {Ezennolim, Paul},
   year    = {2026},
   school  = {University of Sheffield},
-  type    = {{BSc} Thesis},
+  type    = {{BSc} Dissertation},
   note    = {Code available at https://github.com/PaulEzennolim/Carbon-flux-quatification.git}
 }
 ```
@@ -610,18 +610,18 @@ If you use this code or findings in your research, please cite:
 | Source code (`models/`, `scripts/`) | [MIT License](LICENSE) |
 | FLUXNET2015 data | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — cite original data providers |
 | TEMPO-80M model weights | MIT License — cite [Cao et al. 2024] |
-| Figures and text | CC BY 4.0 — cite this thesis |
+| Figures and text | CC BY 4.0 — cite this dissertation |
 
 ---
 
 ## Acknowledgments
 
-- **Thesis supervisor:** [Professor Po Yang](https://sheffield.ac.uk/cs/people/academic/po-yang) — for guidance on experimental design and statistical methodology
+- **Dissertation supervisor:** [Professor Po Yang](https://sheffield.ac.uk/cs/people/academic/po-yang) — for guidance on experimental design and statistical methodology
 - **FLUXNET community** — for maintaining the open FLUXNET2015 database and all site
   principal investigators who contributed data
 - **AutonLab (CMU)** — for open-sourcing the TEMPO-80M foundation model
 - **ICOS RI** — for supporting eddy-covariance infrastructure across European sites
-- **Computational resources** — analyses performed on personal hardware (Apple M3 Max, 128 GB RAM);
+- **Computational resources** — analyses performed on personal hardware (Apple M4, 24 GB RAM);
   no HPC allocation required
 
 ---
