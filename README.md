@@ -587,7 +587,7 @@ forecast accuracy is the primary objective and compute is not the bottleneck.
 
 ## Citation
 
-📄 <a href="Paul_Ezennolim_Dissertation.pdf" target="_blank" rel="noopener noreferrer"><strong>Read the full dissertation (PDF)</strong></a>
+📄 **[Read the full dissertation (PDF)](https://github.com/PaulEzennolim/Carbon-flux-quatification/raw/main/Paul_Ezennolim_Dissertation.pdf)** &nbsp;<sub>*(Cmd/Ctrl + click to open in a new tab)*</sub>
 
 If you use this code or findings in your research, please cite:
 
