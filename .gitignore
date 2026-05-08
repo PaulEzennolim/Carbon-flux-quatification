@@ -234,5 +234,3 @@ wandb/
 # Keep example/demo data (small samples)
 !data/examples/*.csv
 !data/samples/*.npy
-
-# Writing
